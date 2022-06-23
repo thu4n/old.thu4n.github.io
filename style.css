@@ -1,14 +1,20 @@
-
-html, body {
-  color: MintCream;
-  background-color: MidnightBlue;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,600;1,500&display=swap');
+html,
+body {
+    color: MintCream;
+    background-color: MidnightBlue;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 h1 {
-  color: pink;
-  text-align: center;
+    color: pink;
+    text-align: center;
+    font-weight: bolder;
+    font-family: "Montserrat",sans-serif;
+    font-size : 32px;
 }
-.responsive{
-  width: 100%;
-  height: auto;
+
+.responsive {
+    width: 100%;
+    height: auto;
 }
