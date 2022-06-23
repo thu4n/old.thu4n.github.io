@@ -17,3 +17,8 @@ h1 {
     width: 100%;
     height: auto;
 }
+.logo{
+    background-color: transparent;
+    border:0cm;
+    cursor: pointer;
+}
