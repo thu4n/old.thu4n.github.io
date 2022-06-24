@@ -22,3 +22,15 @@ h1 {
     border:0cm;
     cursor: pointer;
 }
+h3{
+    display: inline;
+}
+a:link{
+    color:antiquewhite;
+}
+address{
+    display:inline-block;
+    margin-right:10px;
+    font-weight: bold;
+    font-size: large;
+}
