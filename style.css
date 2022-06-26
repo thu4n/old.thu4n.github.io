@@ -35,6 +35,13 @@ h1 {
     max-width: 75px;
     height: auto;
 }
+.flex{
+    display: inline-flex;
+}
+.flex div{
+    flex:1;
+    margin: 5px;
+}
 h3{
     display: inline;
 }
