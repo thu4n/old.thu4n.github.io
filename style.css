@@ -17,6 +17,11 @@ h1 {
     width: 100%;
     height: auto;
 }
+.responsive2{
+    width: 100%;
+    max-width: 75px;
+    height: auto;
+}
 .logo{
     background-color: transparent;
     border:0cm;
