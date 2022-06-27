@@ -129,7 +129,8 @@ h1 {
 .botGr {
     position: fixed;
     bottom: 0;
-    left: 41%;
+    left: 50%;
+    transform: translate(-50%, -15%);
 }
 
 h3 {
