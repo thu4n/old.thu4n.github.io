@@ -28,21 +28,14 @@ body {
 }
 
 .topnav a:hover {
+    /*background-color: #ddd;
+    color: black;*/
     border-bottom: 3px solid #1363DF;
 }
 
 .topnav a.active {
     border-bottom: 3px solid #1363DF;
 }
-
-h1 {
-    color: #DFF6FF;
-    text-align: center;
-    font-weight: 900;
-    font-family: Montserrat, sans-serif;
-    font-size: 6.5vw;
-}
-
 .leftTitle {
     position: relative;
     left: 3px;
@@ -132,10 +125,28 @@ h1 {
     left: 50%;
     transform: translate(-50%, -15%);
 }
-
+h1 {
+    color: #DFF6FF;
+    text-align: center;
+    font-weight: 900;
+    font-family: Montserrat, sans-serif;
+    font-size: 6.5vw;
+}
+h2{
+    color: #DFF6FF;
+    text-align: center;
+    font-weight: 700;
+    font-family: Montserrat, sans-serif;
+    font-size: 40px;
+}
 h3 {
-    display: inline;
-    padding: 5px;
+    color: #DFF6FF;
+    font-weight: 500;
+    margin-left: 10%;
+    margin-right: 10%;
+    font-size: 20px;
+    text-align: justify;
+    
 }
 
 a:link {
@@ -145,4 +156,12 @@ a:link {
 address {
     font-weight: 300;
     font-size: 1.1vw;
+}
+@media screen and (max-width: 600px) {
+    h2{
+        font-size: 20px;
+    }
+    h3{
+        font-size: 15px;
+    }
 }
