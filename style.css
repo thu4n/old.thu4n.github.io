@@ -36,6 +36,7 @@ body {
 .topnav a.active {
     border-bottom: 3px solid #1363DF;
 }
+
 .leftTitle {
     position: relative;
     left: 3px;
@@ -125,16 +126,6 @@ body {
     left: 50%;
     transform: translate(-50%, -15%);
 }
-.urlBlock{
-    display: inline-block;
-    margin-left: auto;
-    position: relative;
-    left: -5px;;
-    padding: 8px;
-}
-.urlBlock2 {
-    display: inline-block;
-};
 
 h1 {
     color: #DFF6FF;
@@ -143,13 +134,15 @@ h1 {
     font-family: Montserrat, sans-serif;
     font-size: 6.5vw;
 }
-h2{
+
+h2 {
     color: #DFF6FF;
     text-align: center;
     font-weight: 700;
     font-family: Montserrat, sans-serif;
     font-size: 40px;
 }
+
 h3 {
     color: #DFF6FF;
     font-weight: 500;
@@ -157,7 +150,7 @@ h3 {
     margin-right: 10%;
     font-size: 20px;
     text-align: justify;
-    
+
 }
 
 a:link {
@@ -168,11 +161,115 @@ address {
     font-weight: 300;
     font-size: 1.1vw;
 }
+
+* {
+    box-sizing: border-box;
+}
+
+.timeline {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.timeline::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    background-color: #DFF6FF;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    margin-left: -3px;
+}
+
+.container {
+    padding: 10px 40px;
+    position: relative;
+    background-color: inherit;
+    width: 50%;
+    ;
+}
+
+.container::after {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    right: -17px;
+    background-color: #1363DF;
+    border: 4px solid #47B5FF;
+    top: 15px;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.left {
+    left: 0;
+}
+
+.right {
+    left: 50%;
+}
+
+.left::before {
+    content: " ";
+    height: 0;
+    position: absolute;
+    top: 22px;
+    width: 0;
+    z-index: 1;
+    right: 30px;
+    border: medium solid #1363DF;
+    border-width: 10px 0 10px 10px;
+    border-color: transparent transparent transparent #1363DF;
+}
+
+.right::before {
+    content: " ";
+    height: 0;
+    position: absolute;
+    top: 22px;
+    width: 0;
+    z-index: 1;
+    left: 30px;
+    border: medium solid #1363DF;
+    border-width: 10px 10px 10px 0;
+    border-color: transparent #1363DF transparent transparent;
+}
+
+.right::after {
+    left: -16px;
+}
+
+.content {
+    padding: 20px 30px;
+    background-color: #1363DF;
+    position: relative;
+    border-radius: 6px;
+}
+
+.subCon1 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 500;
+    position: relative;
+    top: -30px;
+}
+
+.subCon2 {
+    text-align: center;
+    font-size: 20px;
+    position: relative;
+    top: -30px;
+}
+
 @media screen and (max-width: 600px) {
-    h2{
+    h2 {
         font-size: 20px;
     }
-    h3{
+
+    h3 {
         font-size: 15px;
     }
 }
