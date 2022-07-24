@@ -125,6 +125,17 @@ body {
     left: 50%;
     transform: translate(-50%, -15%);
 }
+.urlBlock{
+    display: inline-block;
+    margin-left: auto;
+    position: relative;
+    left: -5px;;
+    padding: 8px;
+}
+.urlBlock2 {
+    display: inline-block;
+};
+
 h1 {
     color: #DFF6FF;
     text-align: center;
