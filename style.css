@@ -20,16 +20,14 @@ body {
     color: #DFF6FF;
     text-align: center;
     font-weight: 500;
-    padding: 0.5vw 2vw;
+    padding: 5px 26px;
     text-decoration: none;
-    font-size: 1.4vw;
+    font-size: 22px;
     position: relative;
     top: 0.6vw;
 }
 
 .topnav a:hover {
-    /*background-color: #ddd;
-    color: black;*/
     border-bottom: 3px solid #1363DF;
 }
 
@@ -40,30 +38,41 @@ body {
 .leftTitle {
     position: relative;
     left: 3px;
-    float: left;
+    /*float: left;*/
 }
 
-.headerImg {
+.headerImg a{
     float: left;
-    width: 30vw;
+    width: 110px;
     height: auto;
+    position: relative;
+    top: -7px;
+    left: -20px;
+    
 }
-
-.header1 {
-    font-size: 2.2vw;
+.headerImg a:hover{
+    border: none ;
+}
+.header1 a{
+    font-size: 30px;
+    float: right;
     display: inline-flex;
     font-family: Montserrat, sans-serif;
     font-weight: 900;
     color: #47B5FF;
     position: relative;
-    top: -1.5vw;
-    right: 26.25vw;
+    top: 5px;
+    left:-70px;
 
 }
-
+.header1 a.active{
+    border-bottom: none;
+    color: #47B5FF;
+    display: inline-flex;
+}
 .subHeader {
     font-weight: 300;
-    font-size: 2.2vw;
+    font-size: 31px;
     ;
     text-align: center;
     position: relative;
@@ -76,8 +85,8 @@ body {
     font-weight: 500;
     text-align: center;
     position: relative;
-    font-size: 1.5vw;
-    top: 1.75vw;
+    font-size: 18px;
+    top: 25px;
 }
 
 .responsive {
@@ -87,11 +96,11 @@ body {
 
 .responsive2 {
     width: 100%;
-    max-width: 2vw;
+    max-width: 38px;
     height: auto;
     padding: 1px;
     position: relative;
-    bottom: -1vw;
+    bottom: -12px;
 }
 
 .logo {
@@ -112,7 +121,9 @@ body {
     display: flex;
     justify-content: center;
 }
-
+.flex a{
+    font-size: 15px;
+}
 .centerGr {
     position: fixed;
     top: 50%;
@@ -132,7 +143,7 @@ h1 {
     text-align: center;
     font-weight: 900;
     font-family: Montserrat, sans-serif;
-    font-size: 6.5vw;
+    font-size: 100px;
 }
 
 h2 {
@@ -141,6 +152,11 @@ h2 {
     font-weight: 700;
     font-family: Montserrat, sans-serif;
     font-size: 40px;
+}
+h2.blocktext{
+    margin-left: auto;
+    margin-right: auto;
+    width: 8em;
 }
 
 h3 {
@@ -265,11 +281,51 @@ address {
 }
 
 @media screen and (max-width: 600px) {
+    .topnav a{
+        font-size: 11px;
+        padding: 4px 13px;
+    }
+    h1{
+        font-size: 50px;
+    }
+    .headerImg a{
+        width: 60px;
+        left: -10px;
+    }
+    .header1 a{
+        font-size: 15px;
+        top: 2px;
+        left: -37px;
+    }
+    .subHeader{
+        font-size: 16px;
+    }
+    .footer{
+        font-size: 14px;
+        top: 10px;
+    }
+    .responsive2{
+        max-width: 28px;
+        bottom: -7px;
+    }
+    .flex a{
+        font-size: 12px;
+    }
     h2 {
-        font-size: 20px;
+        font-size: 18px;
+        display: inline-block;
+    }
+    h2.blocktext{
+        width: 25.5em;
     }
 
     h3 {
-        font-size: 15px;
+        font-size: 13px;
+    }
+    .subCon1{
+        font-size: 17px;
+    }
+    .subCon2{
+        font-size: 13px;
     }
 }
