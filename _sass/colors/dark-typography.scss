@@ -12,11 +12,11 @@
   /* Common color */
   --text-color: rgb(175, 176, 177);
   --text-muted-color: rgb(107, 116, 124);
-  --heading-color: #cccccc;
+  --heading-color: #b1e1ed;
   --blockquote-border-color: rgb(66, 66, 66);
   --blockquote-text-color: rgb(117, 117, 117);
-  --link-color: rgb(138, 180, 248);
-  --link-underline-color: rgb(82, 108, 150);
+  --link-color: #b1e1ed;/*rgb(138, 180, 248);*/
+  --link-underline-color: #b1e1ed;/*rgb(82, 108, 150);*/
   --button-bg: rgb(39, 40, 43);
   --btn-border-color: rgb(63, 65, 68);
   --btn-backtotop-color: var(--text-color);
@@ -38,12 +38,12 @@
   /* Sidebar */
   --sidebar-bg: radial-gradient(circle, #242424 0%, #1d1f27 100%);
   --sidebar-muted-color: #6d6c6b;
-  --sidebar-active-color: rgb(255, 255, 255, 0.8);
-  --nav-cursor-color: rgb(183, 182, 182);
+  --sidebar-active-color:#b1e1ed;/* rgb(255, 255, 255, 0.8);*/
+  --nav-cursor-color: #b1e1ed;/*rgb(183, 182, 182);*/
   --sidebar-btn-bg: rgb(117, 116, 116, 0.2);
 
   /* Topbar */
-  --topbar-text-color: var(--text-color);
+  --topbar-text-color: #b1e1ed/*var(--text-color)*/;
   --topbar-wrapper-bg: rgb(39, 40, 43);
   --search-wrapper-bg: rgb(34, 34, 39);
   --search-wrapper-border-color: rgb(34, 34, 39);
@@ -60,7 +60,7 @@
   --pin-color: inherit;
 
   /* Posts */
-  --toc-highlight: rgb(116, 178, 243);
+  --toc-highlight: #b1e1ed; /*rgb(116, 178, 243);*/
   --tag-bg: rgb(41, 40, 40);
   --tag-hover: rgb(43, 56, 62);
   --tb-odd-bg: rgba(42, 47, 53, 0.52); /* odd rows of the posts' table */
