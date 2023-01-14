@@ -3,8 +3,9 @@
 icon: fas fa-info-circle
 order: 4
 ---
-# About me
+## About me
 Hello there, here are some of my information:
+
 - Full name: Tong Vo Anh Thuan
 - Occupation: Undergraduate
 - Major: Computer Network and Data Communication at University of Information Technology, VNUHCM (2021-2024)
