@@ -14,3 +14,5 @@ Hello there, here are some of my information:
 
 ## About this place
 You are viewing my personal website for posting blogs as well as projects or any of my achievements. If you want to contact me, feel free to click on any of the social links at the bottom of the left side bar!
+## Test
+*thuan*
