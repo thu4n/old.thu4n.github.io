@@ -3,6 +3,7 @@
 icon: fas fa-info-circle
 order: 4
 ---
+Don't have much in mind right now so I will fill this page up later, I guess...
 ## About me
 Hello there, here are some of my information:
 
@@ -14,5 +15,3 @@ Hello there, here are some of my information:
 
 ## About this place
 You are viewing my personal website for posting blogs as well as projects or any of my achievements. If you want to contact me, feel free to click on any of the social links at the bottom of the left side bar!
-## Test
-*thuan*
