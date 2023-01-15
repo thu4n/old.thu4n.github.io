@@ -1,6 +1,5 @@
 ---
 title: My first time participating in Net Challenge 2022
-author: thu4n
 date: 2022-12-19 20:55:00 +0700
 categories: [Blogging]
 tags: [net challenge, competitions]
