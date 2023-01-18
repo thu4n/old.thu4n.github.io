@@ -14,4 +14,4 @@ Hello there, here are some of my information:
 - **From:** the lovely town of Can Tho, Viet Nam
 
 ## About this place
-You are viewing my personal website for posting blogs as well as projects or any of my achievements. If you want to contact me, feel free to click on any of the social links at the bottom of the left side bar!
+You are viewing my personal website for posting blogs as well as projects or any of my achievements. If you want to contact me on Facebook, LinkedIn or via email, feel free to click on any of the social links at the bottom of the left side bar!
