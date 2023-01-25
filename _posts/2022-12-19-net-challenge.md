@@ -43,7 +43,7 @@ Onto the second part, the configuration tasks as well as troubleshooting. The ta
 9. Troubleshooting
 
 Without a doubt, this round was way harder than the previous one. With a bit of help, I did get through task number **3** and **4** and no messing up this time. Number **1** and **2** were done by my two other teammates. The senior guided us all throughout the tasks, it couldn't be done without him. There was one particular large problem with the NAT configuration. The routers were not real routers, they were Layer 3 Switches and thus, did not support NAT. There were probaly other ways to go around this but the whole team coudn't figure it out. Since NAT implementation wasn't possible, 7-9 could not be done as well for having NAT was required. And, time was up.
-I admit it, we did not perform welll at all but in the end, our score was enough for a **third** place. For a first-time participant, I was satisfied with thiis result. I learned so much more about the networking field and my overall experience with the contest was enjoyable!
+I admit it, we did not perform welll at all but in the end, our score was enough for a **third** place. For a first-time participant, I was satisfied with this result. I learned so much more about the networking field and my overall experience with the contest was enjoyable!
 ![img](/assets/img/other/netChallenge2.JPG){: width="700" height="400" }
 _Me and my team (with the judge on the right most)_
 {: .nolineno}
