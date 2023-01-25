@@ -1,6 +1,6 @@
 ---
 title: Game UIT Hackathon 2022 - the biggest joke of the year
-date: 2022-12-19 16:55:00 +0700
+date: 2022-12-28 16:55:00 +0700
 author: thu4n
 categories: [Blogging]
 tags: [game uit hackathon, competitions, hackathon, green constitution]
@@ -42,7 +42,9 @@ We had lunch and a 30-minute break at 11.30am, the food was okay. After that, th
 As the set up was complete, we moved on to new tasks. Two guys were working with Unity to get the core mechanics done, one guy were designing the main UI for the game, one guy was writing the text for the decision cards and I was responsible for translating them to English while helping the design guy with the game's logo.
 The game was starting to take shape and things were looking promising so we had another lunch-break at 3.00pm.
 ### The evening
-It was announced that in the evening, there would be one Facebook post for each team to promote their game. The likes from the post would contribute to a portion of the final score and the team with most likes would have a seat in the top 10. Our attention shifted to marketing the game now. We named the game **"Green Constitution"** and finalized the logo. They said 6.30pm was the deadline for submission for the promoting post so I was *very* stressful with it since the time was rather strict on my end. I made it in time anyways. But here's the thing, the clock hit 7.30pm and there were no posts on Facebook. We thought "Oh, maybe just a short delay of 10 minutes or so" and we couldn't be more wrong...It was **8.30pm** and still **NOTHING**. I went to see the staffs and this was the answer I got: **"We are waiting a little bit more so all teams submit their post in time"**. I could not believe those were the words I heard. This was supposed to be a **contest**, not some class assignments, the teams that didn't make the deadline should be ignored. Waiting for them not only made early submission pointless but also put the early teams at a disadvantage due to them wasting time making the post and not the game itself.
+It was announced that in the evening, there would be one Facebook post for each team to promote their game. The likes from the post would contribute to a portion of the final score and the team with most likes would have a seat in the top 10. Our attention shifted to marketing the game now. We named the game **"Green Constitution"** and finalized the logo.
+
+They said 6.30pm was the deadline for submission for the promoting post so I was *very* stressful with it since the time was rather strict on my end. I made it in time anyways. But here's the thing, the clock hit 7.30pm and there were no posts on Facebook. We thought "Oh, maybe just a short delay of 10 minutes or so" and we couldn't be more wrong...It was **8.30pm** and still **NOTHING**. I went to see the staffs and this was the answer I got: **"We are waiting a little bit more so all teams submit their post in time"**. I could not believe those were the words I heard. This was supposed to be a **contest**, not some class assignments, the teams that didn't make the deadline should be ignored. Waiting for them not only made early submission pointless but also put the early teams at a disadvantage due to them wasting time making the post and not the game itself.
 
 After more teams made their complaints like me, they finally posted on Facebook. Here was our promotion post:
 
@@ -65,5 +67,7 @@ It's 2.00am now, the team was tired but none could sleep. For some reasons I cou
 The final result were announced shortly after that. Believe me, you could not tell a better joke than the result of that day. Over-promising, lacking of actual feature or even funtional ones and overall unrealistic ideas were chosen to be the top 10. It was as if they chose the idea and not the product.
 ## Conclusion
 Although the service for the contestants was done well throughout the hackathon, the final result made the whole thing essentially a joke and a waste of time for anyone seeking to have their product properly evaluated. If you can read Vietnamese and want to know more about this circus called Game UIT Hackathon 2022, read [these reviews of mine and other participants](https://www.facebook.com/GameUITHackathon/reviews/?ref=page_internal).
+
 The repository of our game can be found here: [Green Constitution](https://github.com/thu4n/Green-Constitution)
+
 That is all for this joke of a hackathon.
