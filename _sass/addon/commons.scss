@@ -405,7 +405,7 @@ i { /* fontawesome icons */
   }
 
   p {
-    > img[data-src],
+    > img[data-src], 
     > a.popup {
       &:not(.normal):not(.left):not(.right) {
         @include align-center;
@@ -447,13 +447,11 @@ i { /* fontawesome icons */
       @extend %no-cursor;
       @extend %img-caption;
       @include mt-mb(0.5rem);
-
       cursor: zoom-in;
     }
 
     &:not(.img-link) {
       @extend %link-underline;
-
       &:hover {
         @extend %link-hover;
       }
