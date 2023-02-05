@@ -6,9 +6,8 @@ categories: [Learning]
 tags: [computer network, data link layer]
 mermaid: true
 math: true
+img: '/assets/img/other/thuanOnThi.png'
 ---
-<meta property="og:image" content="https://raw.githubusercontent.com/thu4n/thu4n.github.io/main/assets/img/other/data-link-1.png">
-
 ## I. Lời mở đầu
 ![img](/assets/img/other/thuanOnThi.png){: width="400" height="400" }
 {: .nolineno}
