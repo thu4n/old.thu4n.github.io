@@ -6,7 +6,7 @@ categories: [Learning]
 tags: [computer network, data link layer]
 mermaid: true
 math: true
-img: '/assets/img/other/thuanOnThi.png'
+image: /assets/img/other/thuanOnThi.png
 ---
 ## I. Lời mở đầu
 ![img](/assets/img/other/thuanOnThi.png){: width="400" height="400" }
