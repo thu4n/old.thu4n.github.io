@@ -6,10 +6,12 @@ categories: [Learning]
 tags: [computer network, data link layer]
 mermaid: true
 math: true
-image: /assets/img/other/thuanOnThi.png
+image: /assets/img/other/preview.png
+description: Những nội dung chính của tầng Data link cho thi cuối kỳ
 ---
 ## I. Lời mở đầu
 ![img](/assets/img/other/thuanOnThi.png){: width="400" height="400" }
+_Hình ảnh mình đang hướng dẫn ôn thi sau Tết đúng cách_
 {: .nolineno}
 Xin chào các bạn, mình viết bài này là để tự ôn tập lại kiến thức về tầng Data link trong NMM. Do đó, bài viết sẽ không đi chuyên sâu mà chỉ bao gồm *những nội dung chính* có thể ra trong bài thi **cuối kỳ** của môn này tại UIT.
 
