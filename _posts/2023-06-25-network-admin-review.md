@@ -105,12 +105,95 @@ Trong mọi ví dụ ở trên từ định tuyến tĩnh cho tới định tuy�
 
 ### Định tuyến giữa các VLAN
 
-**VLAN - Virtual Local Area Network** tức là một LAN ảo được sử dụng cho việc phân đoạn các mạng chuyển mạch ở Layer 2. Nói cách khác, với VLAN, từ một LAN vật lý ta có thể phân chia ra thêm nhiều nhóm nhỏ tách biệt nhau và có traffic riêng. Từ đó, câu hỏi đặt ra là định tuyến giữa các VLAN này như thế nào?
+**VLAN - Virtual Local Area Network** tức là một LAN ảo được sử dụng cho việc phân đoạn các mạng chuyển mạch ở Layer 2. Nói cách khác, với VLAN, từ một LAN vật lý ta có thể phân chia ra thêm nhiều nhóm nhỏ tách biệt nhau và có traffic riêng. Từ đó, câu hỏi đặt ra là định tuyến giữa các VLAN này (inter-VLAN routing) như thế nào?
 
 Cách định tuyến ban đầu là sử dụng các Ethernet interface của Router, mỗi interface đó được kết nối với một VLAN khác nhau. Dễ dàng nhận thấy rằng cách thức này không đáp ứng được về mặt **scaling** do số lượng interface vật lý trên một Router bị giới hạn đáng kể. Thay vào đó, người ta sử dụng 2 phương pháp khác là RoS và Multi-layer Switch để đáp ứng các nhu cầu về scaling.
 
 - **RoS** (Router On a Stick)
+    + Phương pháp này chỉ cần một Ethernet interface vật lý để phân luồng cho nhiều VLAN bằng cách sử dụng các **subinterface**. Đây là những interface ảo được tạo ra bởi phần mềm và nhờ vào đó, một interface vật lý có thể có nhiều subinterface. Các subinterface này có thể mang địa chỉ IP và được phân VLAN độc lập với interface của chúng.
+    + Khi cấu hình RoS, cần đảm bảo interface của Router được để ở chế độ `802.1q trunk` và được kết nối đến một trunk port của Switch. Giải thích thêm, trunk là đường liên kết giữa Switch với một Switch khác hoặc một Router, cho phép mang nhiều tín hiệu cùng một lúc mà qua đó, cho phép nhiều VLAN sử dụng chung một interface vật lý để truyền thông.
+
+    > Phương pháp này hiện tại chỉ hoạt động ổn định với **50 VLAN** trở xuống. Thường dùng trong các mạng có kích thước nhỏ và trung bình.
+    {: .prompt-warning }
+
+    + Để minh họa cách cấu hình, ta sẽ sử dụng topology kèm bảng thông tin về VLAN như hình sau:
+
+    <img src="/assets/img/other/network-admin-2.png" alt="drawing" width="450"/>
+    
+    Với cấu hình mặc định của các thiết bị, 2 PC trong hình sẽ không thể giao tiếp được với nhau mà chỉ có 2 Switch là giao tiếp được. Ta sẽ cấu hình định tuyến inter-VLAN theo kiểu Router On a Stick để khắc phục điều này.
+
+    Đầu tiên, ta sẽ cấu hình cho switch S1 trước. Các bước thực hiện bao gồm tạo và đặt tên VLAN, tạo interface VLAN quản lý (VLAN 99) và cuối cùng là cấu hình switchport:
+    ```
+    S1(config)# vlan 10
+    S1(config-vlan)# name LAN10
+    S1(config-vlan)# exit
+    S1(config)# vlan 20
+    S1(config-vlan)# name LAN20
+    S1(config-vlan)# exit
+    S1(config)# vlan 99
+    S1(config-vlan)# name Management
+    S1(config-vlan)# exit
+    S1(config)# interface vlan 99
+    S1(config-if)# ip add 192.168.99.2 255.255.255.0
+    S1(config-if)# no shutdown
+    S1(config-if)# exit
+    S1(config)# interface fa0/6
+    S1(config-if)# switchport mode access
+    S1(config-if)# switchport access vlan 10
+    S1(config-if)# no shutdown
+    S1(config-if)# exit
+    S1(config)# interface fa0/5
+    S1(config-if)# switchport mode trunk
+    S1(config-if)# no shutdown
+    S1(config-if)# exit
+    S1(config)# interface fa0/1
+    S1(config-if)# switchport mode trunk
+    S1(config-if)# no shutdown
+    S1(config-if)# exit
+    ```
+    Sở dĩ tạo VLAN quản lý (Management VLAN) như trên là để cho phép người quản trị có thể truy cập đến Switch thông qua kết nối IP (như là Telnet) và đồng thời cho phép các Switch truyền thông IP với nhau. Ở Switch S2 sẽ cấu hình tương tự như S1 (khác interface).
+
+    Tiếp theo, Router On a Stick thì đương nhiên là sẽ cần cấu hình cho Router. Như bảng thông tin trong hình, ta sẽ chia interface `G0/0/1` của Router R1 ra 3 subinterface tương ứng với 3 VLAN đã tạo ở các Switch S1 và S2.
+
+    ```
+    R1(config)# interface G0/0/1.10
+    R1(config-subif)# encapsulation dot1q 10
+    R1(config-subif)# ip add 192.168.10.1 255.255.255.0
+    R1(config-subif)# exit
+    R1(config)# interface G0/0/1.20
+    R1(config-subif)# encapsulation dot1q 20
+    R1(config-subif)# ip add 192.168.20.1 255.255.255.0
+    R1(config-subif)# exit
+    R1(config)# interface G0/0/1.99
+    R1(config-subif)# encapsulation dot1q 99
+    R1(config-subif)# ip add 192.168.99.1 255.255.255.0
+    R1(config-subif)# exit
+    R1(config)# interface G0/0/1
+    R1(config-if)# no shutdown
+    R1(config-if)# exit
+    ```
+
+    Các dòng lệnh `encapsulation dot1q` kèm theo VLAN id là để cấu hình cho subinterface phản hồi lại các traffic được đóng gói theo chuẩn `802.1q` từ VLAN đó (10, 20 hoặc 99). Các địa chỉ được gán cho các subinterface của R1 chính là các default gateway cho mỗi VLAN tương ứng.
+
 - **Multi-layer Swtich** (Switch Layer 3)
+    + Đây là thiết bị Switch có thể vận hành được ở cả Layer 2 (Data-link) và Layer 3 (Network). Phương pháp này có một số lợi thế như sau:
+        + Tốc độ nhanh hơn RoS do mọi thứ được xử lý ở phần cứng từ chuyển mạch cho tới định tuyến.
+        + Không cần phải sử dụng thêm liên kết tới Router do anh Switch Layer 3 này lo hết rồi.
+        + Các đường trunk không nhất thiết sử dụng chung 1 liên kết vật lý nữa do các liên kết EtherChannels ở Layer 2 có thể được dùng để làm liên kết trunk giữa các Switch với nhau => Tăng băng thông.
+    + Dù mang nhiều ưu điểm và được sử dụng trong các mạng có kích thước từ trung bình đến lớn, nhược điểm lớn nhất của Switch Layer 3 đó là **chi phí cao** (Đồ xịn thì nó phải mắc thôi).
+    + Cấu hình định tuyến cho Switch Layer 3:
+    ```
+    SwitchLayer3(config)# ip routing
+    SwitchLayer3(config)# interface <interface-name>
+    SwitchLayer3(config-if)# no switchport
+    SwitchLayer3(config-if)# ip add <ip-address> <subnet-mask>
+    SwitchLayer3(config-if)# no shutdown
+    SwitchLayer3(config-if)# exit
+    ```
+
+        Lệnh `ip routing` là để kích hoạt định tuyến trên Switch. Sau đó, vào interface cần cấu hình làm cổng định tuyến (routed port) và dùng lệnh `no switchport` để interface này hoạt động ở Layer 3. Cuối cùng, gán địa chỉ IP cho interface đó.
+
+        Các bước tạo và gán VLAN vào interace thực hiện tương tự như cấu hình cho Switch trong RoS.
 
 ## III. Dịch vụ mạng
 
