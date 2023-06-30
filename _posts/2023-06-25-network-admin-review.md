@@ -284,14 +284,98 @@ _**Hình 3. Topology mẫu sử dụng NAT**_
 - Để kiểm tra cấu hình cho cả 3 kiểu NAT trên, ta sử dụng lệnh `show ip nat translation` và `show ip nat statistics`. 
     
 ### ACL
+
+**Khái niệm về ACL**
+
 **ACL - Access Control List** là một chuỗi các câu lệnh dùng để lọc các gói tin dựa trên thông tin có được từ header của gói tin đó. Trong ACL là một danh sách có thứ tự của các phát biểu `permit` hoặc `deny` - cho phép hoặc từ chối, còn được gọi là các entry. Khi một interface có ACL của Router nhận được gói tin nào đó, nó sẽ tiến hành so khớp gói tin với từng entry trong ACL theo thứ tự từ trên xuống. Quá trình so khớp sẽ dừng lại ngay khi khớp với một entry, bỏ qua các entry còn lại chưa duyệt.
 
-Ta có 2 loại ACL là standard ACL và extended ACL.
-- Standard ACL
-    + Chỉ lọc dựa trên địa chỉ nguồn IPv4 => Chỉ hoạt động ở Layer 3
+Khi tạo ACL, tùy theo ngữ cảnh và nhu cầu sử dụng mà chúng ta có nhiều loại ACL khác nhau.
 
-- Extended ACL 
-    + Lọc dựa trên địa chỉ nguồn/đích IPv4, số port TCP/UDP và các thông tin về loại giao thức => Hoạt động ở cả Layer 3 và 4.
+Xét về khả năng lọc gói tin (packet filter), ta có
+- **Standard ACL**: Chỉ lọc dựa trên địa chỉ nguồn IPv4 => Chỉ hoạt động ở Layer 3
+
+- **Extended ACL**: Lọc dựa trên địa chỉ nguồn/đích IPv4, số port TCP/UDP và các thông tin về loại giao thức => Hoạt động ở cả Layer 3 và 4.
+
+Xét về cách đặt tên, ta có
+- **Numbered ACL** (dùng số): Các ACL được đánh số trong đoạn 1 - 99 hoặc 1300 - 1999 là **standard** ACL. Còn đánh số trong các đoạn 100 - 199 hoặc 2000 - 2699 là **extended** ACL. Các số còn lại là dùng cho các mục đích khác, sẽ không đề cập ở đây.
+- **Named ACL** (dùng từ ngữ): Đây là cách thông dụng hơn khi đặt tên cho ACL do nó cho phép người quản trị ghi chú tác dụng của một ACL cụ thể.
+
+Xét về hướng interface để đặt ACL trên Router, ta có
+
+![acl](/assets/img/other/network-admin-4.png)
+_**Hình 4. Inbound và Outbound ACL**_
+
+- **Inbound ACL** - Hướng vào trong Router: Inbound ACL lọc gói tin trước khi nó được xử lý định tuyến bên trong Router.
+- **Outbound ACL** - Hướng ra khỏi Router: Outbound ACL lọc gói tin sau khi nó đã được định tuyến bởi Router.
+
+> Inbound ACL được xem là hiệu quả hơn vì nó giúp bỏ qua việc xử lý định tuyến nếu gói tin bị hủy bỏ từ đầu. Tuy nhiên, tùy vào mỗi trường hợp khác nhau mà sẽ có lúc buộc phải dùng outbound hoặc ngược lại.
+{: .prompt-info }
+
+Nói về vị trí thiết lập ACL, đối với **standard** ACL thì nên đặt gần **đích** nhất có thể còn **extended** ACL thì nên đặt gần **nguồn** nhất có thể. Tất nhiên, các vị trị khuyến khích đó là khi điều kiện cho phép chứ không bắt buộc.
+
+**Cấu hình ACL**
+
+Để định nghĩa cho các entry hay nói tổng quát hơn là để ACL lọc gói tin theo điều kiện mong muốn của người quản trị thì sẽ cần sử dụng tới **wildcard mask** khi cấu hình.
+
+Wildcard mask giống với subnet mask ở chỗ nó cũng sẽ xét từng bit trong một địa chỉ IPv4 để so khớp. Tuy nhiên, quy luật so sánh sẽ ngược lại hoàn toàn, theo đó:
+- Wildcard mask bit 0 - So khớp giá trị bit tương ứng trong địa chỉ
+- Wildcard mask bit 1 - Mặc kệ giá trị bit tương ứng trong địa chỉ
+
+Để dễ hình dung rõ hơn về ý nghĩa wildcard mask, hãy xem bảng bên dưới:
+
+|<center>Wildcard mask</center> | <center>Dạng nhị phân</center>| <center>Ý nghĩa</center>|
+|:-------|:--------|:--------|
+| 0.0.0.0  | 00000000 00000000 00000000 00000000| So khớp từng bit|
+| 255.255.255.255 |  11111111 11111111 11111111 11111111 | Mặc kệ mọi bit|
+|0.0.0.255|00000000 00000000 00000000 11111111|Chỉ so khớp 3 octect đầu|
+|0.0.0.248|00000000 00000000 00000000 11111100|So 3 octect đầu và 2 bit cuối của octet cuối|
+
+Wildcard mask sử dụng kết hợp với địa chỉ IP sẽ giúp người quản trị đặc tả được các điều kiện mong muốn của mình. Ta xét một số trường hợp cấu hình ACL (numbered ACL) thường dùng như sau:
+
+1. Cho phép một host cụ thể
+
+    ```
+    Router(config)# access-list 1 permit 192.168.1.254 0.0.0.0
+    ```
+    Khi sử dụng wildcard mask `0.0.0.0` để so khớp từng bit thì chỉ có host nào mang đúng địa chỉ IP `192.168.1.254` mới được cho phép đi qua. Ngoài ra, ta có thể dùng từ khóa `host` thay cho wildcard mask để cấu hình cho trường hợp này vì chúng mang ý nghĩa như nhau.
+
+    ```
+    Router(config)# access-list 1 permit host 192.168.1.254
+    ```
+
+2. Cho phép các host của một subnet cụ thể
+    ```
+    Router(config)# access-list 1 permit 192.168.1.0 0.0.0.255
+    ```
+    Wildcard mask `0.0.0.255` sẽ chỉ so khớp 3 octet đầu của địa chỉ IP, còn lại mặc kệ. Do đó, tất cả các host thuộc subnet `192.168.1.0/24` sẽ được phép đi qua.
+3. Cho phép mọi địa chỉ IP đi qua
+    ```
+    Router(config)# access-list 1 permit 255.255.255.255
+    or
+    Router(config)# access-list 1 permit any
+    ```
+    Câu lệnh thứ 2 là dùng từ khóa `any` sẽ mang cùng ý nghĩa với wildcard mask `255.255.255.255`. Thường đây sẽ là entry cuối cùng người quản trị nhập cho ACL để phòng trường hợp các mọi chỉ IP không khớp các entry trước đều bị chặn. Nguyên nhân là do khi tạo ACL, luôn luôn có một entry được tạo sẵn với nội dung `deny any` tức từ chối tất cả.
+4. Từ chối mọi truy cập HTTP/HTTPS
+    ```
+    Router(config)# access-list 103 deny tcp any any eq 80
+    Router(config)# access-list 103 deny tcp any any eq 443
+    ```
+    Do yêu cầu liên quan tới các giao thức nên cần dùng tới extended ACL được đánh số `103`. HTTP và HTTPS thì sẽ sử dụng TCP ở Layer 4 và số port lần lượt là 80 và 443. `any any` là chỉ bất kì địa chỉ nguồn và địa chỉ đích nào, `eq` tức là kiểm tra bằng (so sánh số port ở header).
+
+    > Cấu hình extended ACL thì muôn vàn trường hợp nên là bạn có thể xem thêm các từ khóa [tại đây](https://www.cisco.com/c/en/us/td/docs/app_ntwk_services/waas/waas/v401_v403/command/reference/cmdref/ext_acl.html). Bạn nào sợ quên thì nên ghi luôn số port của các giao thức kèm theo dùng TCP hay UDP vào tờ A4.
+    {: .prompt-info }
+
+Ở trên chỉ mới là tạo ACL, ta cần đặt chúng vào các interface để đưa vào hoạt động (Sử dụng lại ACL 1 và 103).
+
+```
+    Router(config)# interface g0/0/0
+    Router(config-if)# ip access-group 103 in
+    Router(config-if)# ip access-group 1 out
+    Router(config-if)# exit
+```
+Như trong đoạn lệnh minh họa là ta cho interface `g0/0/0` của Router chạy ACL 103 theo inbound còn ACL 1 là chạy theo outbound. Mỗi một interface của Router có thể chạy **tối đa** 4 ACL: inbound IPv4, inbound IPv6, outbound IPv4 và outbound IPv6.
+
+Khi hoàn tất cấu hình, ta có thể kiểm tra lại với lệnh `show access-lists` để coi toàn bộ các ACL hiện có.
 
 
 ### DHCP
