@@ -54,6 +54,8 @@ Chúng ta được học 2 loại đó là định tuyến tĩnh và định tuy
 ```
         Trong đó, `network` là địa chỉ mạng còn `mask` là subnet mask của mạng đó. Xét topology minh họa bên dưới:
         ![topology](/assets/img/other/network-admin-1.png)
+        _**Hình 1. Topology minh họa**_
+
         Giả sử, Router R1 cần chuyển tiếp gói tin đến mạng `172.31.1.128/26`. Để làm được điều đó, Router R1 sẽ cần phải giao tiếp được với R3 và do 2 anh này **không** liên kết trực tiếp với nhau nên ta sẽ cần một anh Router trung gian - Router R2. Tóm lại, để đến được mạng đích, R1 sẽ cần phải đi qua R2 đầu tiên rồi ở R2, ta tiếp tục cấu hình cho đi đến R3. Câu lệnh cấu hình như sau:
 
         ```
@@ -119,6 +121,7 @@ Cách định tuyến ban đầu là sử dụng các Ethernet interface của R
     + Để minh họa cách cấu hình, ta sẽ sử dụng topology kèm bảng thông tin về VLAN như hình sau:
 
     <img src="/assets/img/other/network-admin-2.png" alt="drawing" width="450"/>
+    _**Hình 2. Topology mẫu có 3 VLAN**_
     
     Với cấu hình mặc định của các thiết bị, 2 PC trong hình sẽ không thể giao tiếp được với nhau mà chỉ có 2 Switch là giao tiếp được. Ta sẽ cấu hình định tuyến inter-VLAN theo kiểu Router On a Stick để khắc phục điều này.
 
@@ -203,6 +206,7 @@ Cách định tuyến ban đầu là sử dụng các Ethernet interface của R
 - NAT - Network Address Translation là một dịch vụ mạng giúp chuyển đổi một địa chỉ IP private thành public và ngược lại. NAT thường được dùng để cho phép các thiết bị ở trong LAN đi ra Internet được.
 
 ![nat-table](/assets/img/other/network-admin-3.png)
+_**Hình 3. Topology mẫu sử dụng NAT**_
 
 - Để hiểu rõ hơn cách thức hoạt động tổng quan của NAT, ta xét hình bên trên (cắt từ tài liệu ra nên hơi bể). Giả sử trường hợp là PC muốn giao tiếp với web server, trong đó Router R2 đang chạy dịch vụ NAT. Các bước diễn ra như sau:
     1. PC gửi gói tin với địa chỉ IP đích là `209.165.201.1` (đây là địa chỉ IP public)
@@ -221,11 +225,74 @@ Cách định tuyến ban đầu là sử dụng các Ethernet interface của R
 
     |<center>Static NAT</center> | <center>Dynamic NAT</center>| <center>PAT</center>|
     |:-------|:--------|:--------|
-    | Ánh xạ 1:1 giữa địa chỉ inside local và <br> inside global | Tương tự static NAT | Một địa chỉ inside global có thể được <br> ánh xạ tới nhiều địa chỉ inside local|
-    | Các ánh xạ được cấu hình tĩnh <br> bởi người quản trị | Tự ánh xạ theo cơ chế First Come <br> First Serve với một dãy các <br> địa chỉ public được tạo sẵn | Tự ánh xạ theo cơ chế Next <br> Available Port|
-    |Test|
+    | Ánh xạ 1:1 giữa địa chỉ inside local <br>và inside global | Tương tự static NAT | Một địa chỉ inside global có thể <br> được ánh xạ tới nhiều địa chỉ <br> inside local|
+    | Các ánh xạ được cấu hình tĩnh <br> bởi người quản trị | Tự ánh xạ theo cơ chế **First Come <br> First Serve** với một dãy các <br> địa chỉ public được tạo sẵn | Tự ánh xạ theo cơ chế **Next <br> Available Port** (*)|
+    |Chỉ dùng IPv4|Tương tự static NAT|Dùng IPv4 kèm số port nguồn
 
+    (*) - PAT sử dụng số port để phân biệt giữa các địa chỉ nguồn đang dùng chung một địa chỉ inside global. Do đó, nếu số port hiện tại đã được chiếm dụng, nó sẽ tìm số port thích hợp tiếp theo. Trong trường hợp không còn số port nào trống cho địa chỉ đó, PAT sẽ chuyển qua địa chỉ inside global kế tiếp.
+- Cấu hình các kiểu dịch vụ NAT (topology và địa chỉ IP sẽ sử dụng lại của hình 3):
+    + Static NAT
+    ```
+    R2(config)# ip nat inside source static 192.168.10.10 209.165.200.226
+    R2(config)# interface s0/1/0
+    R2(config-if) ip nat inside
+    R2(config-if) exit
+    R2(config) interface s0/1/1
+    R2(config-if) ip nat outside
+    R2(config-if) exit
+    ```
+    Câu lệnh đầu tiên chính là việc ánh xạ tĩnh địa chỉ inside local tới địa chỉ inside global với `192.168.10.10` là địa chỉ IP của PC. Sau đó, ta cấu hình interface liên kết với LAN ở chế độ `nat inside` còn interface đi ra Internet ở chế độ `nat outside`.
+    + Dynamic NAT
+    ```
+    R2(config)# ip nat pool NAT-POOL1 209.165.200.226 209.165.200.240 netmask 255.255.255.224
+    R2(config)# access-list 1 permit 192.168.0.0 0.0.255.255
+    R2(config)# ip nat inside source list 1 pool NAT-POOL1
+    R2(config)# interface s0/1/0
+    R2(config-if) ip nat inside
+    R2(config-if) exit
+    R2(config) interface s0/1/1
+    R2(config-if) ip nat outside
+    R2(config-if) exit
+    ```
+    Câu lệnh đầu tiên dùng để định nghĩa một dãy các địa chỉ IP dùng cho việc chuyển đổi. Sau đó, tạo thêm một ACL để xác định những địa chỉ có dạng `192.168.X.X` mới cần được chuyển đổi (Khái niệm ACL sẽ nói ở phần nội dung của nó). Tạo xong ACL, ta ràng buộc nó vào danh sách địa chỉ IP nguồn inside - `ip nat inside source list`. Cuối cùng, cấu hình cho các interface tương tự như static NAT.
+
+    + PAT
+
+        Với PAT sử dụng một địa chỉ IPv4 duy nhất, ta chỉ việc thêm từ khóa `overload` sau khi ràng buộc ACL vào interface liên kết với LAN.
+    ```
+    R2(config)# ip nat inside source list 1 interface serial 0/1/0 overload
+    R2(config)# access-list 1 permit 192.168.0.0 0.0.255.255
+    R2(config)# interface serial0/1/0
+    R2(config-if)# ip nat inside
+    R2(config-if)# exit
+    R2(config)# interface Serial0/1/1
+    R2(config-if)# ip nat outside
+    R2(config-if)# exit
+    ```
+        Với PAT sử dụng dãy địa chỉ IPv4, ta cấu hình tương tự dynamic NAT nhưng sẽ thêm từ khóa `overload` khi ràng buộc ACL.
+    ```
+    R2(config)# ip nat pool NAT-POOL1 209.165.200.226 209.165.200.240 netmask 255.255.255.224
+    R2(config)# access-list 1 permit 192.168.0.0 0.0.255.255
+    R2(config)# ip nat inside source list 1 pool NAT-POOL1 overload
+    R2(config)# interface serial0/1/0
+    R2(config-if)# ip nat inside
+    R2(config-if)# exit
+    R2(config)# interface Serial0/1/1
+    R2(config-if)# ip nat outside
+    R2(config-if)# exit
+    ```
+- Để kiểm tra cấu hình cho cả 3 kiểu NAT trên, ta sử dụng lệnh `show ip nat translation` và `show ip nat statistics`. 
+    
 ### ACL
+**ACL - Access Control List** là một chuỗi các câu lệnh dùng để lọc các gói tin dựa trên thông tin có được từ header của gói tin đó. Trong ACL là một danh sách có thứ tự của các phát biểu `permit` hoặc `deny` - cho phép hoặc từ chối, còn được gọi là các entry. Khi một interface có ACL của Router nhận được gói tin nào đó, nó sẽ tiến hành so khớp gói tin với từng entry trong ACL theo thứ tự từ trên xuống. Quá trình so khớp sẽ dừng lại ngay khi khớp với một entry, bỏ qua các entry còn lại chưa duyệt.
+
+Ta có 2 loại ACL là standard ACL và extended ACL.
+- Standard ACL
+    + Chỉ lọc dựa trên địa chỉ nguồn IPv4 => Chỉ hoạt động ở Layer 3
+
+- Extended ACL 
+    + Lọc dựa trên địa chỉ nguồn/đích IPv4, số port TCP/UDP và các thông tin về loại giao thức => Hoạt động ở cả Layer 3 và 4.
+
 
 ### DHCP
 
