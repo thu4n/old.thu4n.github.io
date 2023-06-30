@@ -223,7 +223,7 @@ Cách định tuyến ban đầu là sử dụng các Ethernet interface của R
     |:-------|:--------|:--------|
     | Ánh xạ 1:1 giữa địa chỉ inside local và <br> inside global | Tương tự static NAT | Một địa chỉ inside global có thể được <br> ánh xạ tới nhiều địa chỉ inside local|
     | Các ánh xạ được cấu hình tĩnh <br> bởi người quản trị | Tự ánh xạ theo cơ chế First Come <br> First Serve với một dãy các <br> địa chỉ public được tạo sẵn | Tự ánh xạ theo cơ chế Next <br> Available Port|
-
+    |Test|
 
 ### ACL
 
