@@ -197,7 +197,33 @@ Cách định tuyến ban đầu là sử dụng các Ethernet interface của R
 
 ## III. Dịch vụ mạng
 
+Định tuyến chỉ mới giúp các node giữa các LAN hoặc VLAN giao tiếp được với nhau. Để đáp ứng các nhu cầu khác khi sử dụng mạng của người dùng lẫn người quản trị thì sẽ cần tới các dịch vụ mạng.
+
 ### NAT
+- NAT - Network Address Translation là một dịch vụ mạng giúp chuyển đổi một địa chỉ IP private thành public và ngược lại. NAT thường được dùng để cho phép các thiết bị ở trong LAN đi ra Internet được.
+
+![nat-table](/assets/img/other/network-admin-3.png)
+
+- Để hiểu rõ hơn cách thức hoạt động tổng quan của NAT, ta xét hình bên trên (cắt từ tài liệu ra nên hơi bể). Giả sử trường hợp là PC muốn giao tiếp với web server, trong đó Router R2 đang chạy dịch vụ NAT. Các bước diễn ra như sau:
+    1. PC gửi gói tin với địa chỉ IP đích là `209.165.201.1` (đây là địa chỉ IP public)
+    2. Router R1 nhận được và chuyển tiếp đến R2
+    3. Router R2 nhận được gói tin và tiến hành kiểm tra xem địa chỉ IP nguồn có cần được chuyển đổi không (trong trường hợp này là có).
+    4. Router R2 thêm ánh xạ địa chỉ nguồn local tới địa chỉ nguồn global vào bảng NAT (`192.168.10.10` --> `209.165.200.226`)
+    5. Router R2 chuyển tiếp gói tin với địa chỉ nguồn đã được chuyển đổi tới đích
+    6. Web server phản hồi với gói tin gửi tới địa chỉ đích là địa chỉ inside global `209.165.200.226`.
+    7. Router R2 nhận được, check địa chỉ đích và tìm trong bảng NAT với entry tương ứng. Sau đó, đổi nó thành địa chỉ inside local, tức địa chỉ IP của PC trong LAN.
+- Trong NAT sẽ bao gồm 4 loại địa chỉ:
+    + **Inside local address** - Địa chỉ nguồn của thiết bị gửi ở phần mạng cục bộ (Thường là địa chỉ IP private).
+    + **Inside global address** - Địa chỉ nguồn của thiết bị gửi được chuyển đổi qua NAT và được sử dụng ở phần mạng toàn cục
+    + **Outside local address** - Địa chỉ đích ở phần mạng cục bộ. Thông thường, địa chỉ này sẽ trùng với địa chỉ outside global.
+    + **Outside global address** - Địa chỉ đích ở phần mạng toàn cục.
+- Ta có 3 kiểu NAT là static NAT, dynamic NAT và PAT - Port Address Translation (còn được gọi là NAT overload). Bảng so sánh bên dưới sẽ bao gồm các thông tin về 3 anh này.
+
+    |<center>Static NAT</center> | <center>Dynamic NAT</center>| <center>PAT</center>|
+    |:-------|:--------|:--------|
+    | Ánh xạ 1:1 giữa địa chỉ inside local và <br> inside global | Tương tự static NAT | Một địa chỉ inside global có thể được <br> ánh xạ tới nhiều địa chỉ inside local|
+    | Các ánh xạ được cấu hình tĩnh <br> bởi người quản trị | Tự ánh xạ theo cơ chế First Come <br> First Serve với một dãy các <br> địa chỉ public được tạo sẵn | Tự ánh xạ theo cơ chế Next <br> Available Port|
+
 
 ### ACL
 
@@ -205,7 +231,17 @@ Cách định tuyến ban đầu là sử dụng các Ethernet interface của R
 
 ## IV. Quản trị Windows
 
+### Mô hình Workgroup
+
+### Mô hình Domain với Active Directory
+
+### Các dịch vụ trên Windows Server
+
 ## V. Quản trị Linux
+
+### Tương tác với file và thư mục
+
+### Các lệnh thường dùng trong Linux
 
 ## VI. Basic Network Troubleshooting
 
