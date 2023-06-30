@@ -355,6 +355,7 @@ Wildcard mask sử dụng kết hợp với địa chỉ IP sẽ giúp người 
     Router(config)# access-list 1 permit any
     ```
     Câu lệnh thứ 2 là dùng từ khóa `any` sẽ mang cùng ý nghĩa với wildcard mask `255.255.255.255`. Thường đây sẽ là entry cuối cùng người quản trị nhập cho ACL để phòng trường hợp các mọi chỉ IP không khớp các entry trước đều bị chặn. Nguyên nhân là do khi tạo ACL, luôn luôn có một entry được tạo sẵn với nội dung `deny any` tức từ chối tất cả.
+
 4. Từ chối mọi truy cập HTTP/HTTPS
     ```
     Router(config)# access-list 103 deny tcp any any eq 80
@@ -365,7 +366,18 @@ Wildcard mask sử dụng kết hợp với địa chỉ IP sẽ giúp người 
     > Cấu hình extended ACL thì muôn vàn trường hợp nên là bạn có thể xem thêm các từ khóa [tại đây](https://www.cisco.com/c/en/us/td/docs/app_ntwk_services/waas/waas/v401_v403/command/reference/cmdref/ext_acl.html). Bạn nào sợ quên thì nên ghi luôn số port của các giao thức kèm theo dùng TCP hay UDP vào tờ A4.
     {: .prompt-info }
 
-Ở trên chỉ mới là tạo ACL, ta cần đặt chúng vào các interface để đưa vào hoạt động (Sử dụng lại ACL 1 và 103).
+Với những trường hợp trên, nếu muốn dùng named ACL thì ta cấu hình như sau:
+```
+Router(config)# ip access-list standard PERMIT-HOST
+Router(config-std-nacl)# permit 192.168.1.254 0.0.0.0
+Router(config-std-nacl)# exit
+Router(config)# ip access-list extended DENY-HTTP-HTTPS
+Router(config-ext-nacl)# deny tcp any any eq 80
+Router(config-ext-nacl)# deny tcp any any eq 443
+Router(config-ext-nacl)# exit
+```
+
+Khi tạo xong ACL, ta cần đặt chúng vào các interface để đưa vào hoạt động (Sử dụng lại ACL 1 và 103).
 
 ```
     Router(config)# interface g0/0/0
@@ -376,7 +388,6 @@ Wildcard mask sử dụng kết hợp với địa chỉ IP sẽ giúp người 
 Như trong đoạn lệnh minh họa là ta cho interface `g0/0/0` của Router chạy ACL 103 theo inbound còn ACL 1 là chạy theo outbound. Mỗi một interface của Router có thể chạy **tối đa** 4 ACL: inbound IPv4, inbound IPv6, outbound IPv4 và outbound IPv6.
 
 Khi hoàn tất cấu hình, ta có thể kiểm tra lại với lệnh `show access-lists` để coi toàn bộ các ACL hiện có.
-
 
 ### DHCP
 
