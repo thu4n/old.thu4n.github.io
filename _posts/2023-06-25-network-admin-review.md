@@ -393,15 +393,50 @@ Khi hoàn tất cấu hình, ta có thể kiểm tra lại với lệnh `show ac
 
 DHCP - Dynamic Host Configuration Protocol thực hiện quản lý và cấp phát tự động các địa chỉ IP đến các thiết bị mạng bên trong một mạng. Nói cách khác, thay vì phải đi gán IP thủ công cho từng thiết bị trong mạng thì người quản trị chỉ việc cấu hình DHCP cho Router là được.
 
-Cấu hình DHCP thì trên lớp chỉ được dạy cấu hình cho máy server không phải Router nhưng bạn nào muốn biết thêm thì có thể tham khảo các lệnh cấu hình [tại đây](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/ipaddr_dhcp/configuration/15-sy/dhcp-15-sy-book/config-dhcp-server.html).
-
+Lý thuyết DHCP thì mình thấy không đề cập quá nhiều nên ta đi thẳng vào cách cấu hình luôn:
+```
+Router(config)# ip dhcp included-address 192.168.1.101 192.168.1.150
+Router(config)# ip dhcp pool
+Router(dhcp-config)# network 192.168.1.0 255.255.255.0
+Router(dhcp-config)# domain-name cisco.com
+Router(dhcp-config)# dns-server 8.8.8.8
+Router(dhcp-config)# default-router 192.168.1.1
+Router(dhcp-config)# exit
+Router(config)# service dhcp vlan1
+```
+Câu lệnh đầu tiên là để khai báo dãy địa chỉ IP sẽ sử dụng trong DHCP. Các câu lệnh tiếp theo lần lượt là tạo pool DHCP, xác định subnet, tên miền, dns server và Router mặc định. Các DHCP client sẽ cần các thông tin này để yêu cầu cấp phát động địa chỉ IP. Cuối cùng, đưa DHCP vào hoạt động trên một interface mà ở đây là `vlan1`.
 ## IV. Quản trị Windows
 
 ### Mô hình Workgroup
 
+<img src="/assets/img/other/network-admin-5.jpg" alt="drawing" width="450"/>
+_**Hình 5. Setup mô hình workgroup**_
+
+Workgroup là một môi trường dành cho các văn phòng loại nhỏ hoạt động theo hình thức mạng LAN **Peer-to-Peer**. Nó là một nhóm các máy tính chia sẻ tài nguyên và quyền quản lí với nhau. Do đó, workgroup có thể được tạo với các PC thông thường mà không cần phải có thêm một server.
+
+Mình không nghĩ đây sẽ là nội dung được hỏi nhiều trong thi nên nguyên lý chi tiết và cách set up sẽ không được đề cập ở đây (Cầu nguyện thầy không đọc được cái này và quyết định cho nó vô thi).
+
 ### Mô hình Domain với Active Directory
 
+Ngược lại với Workgroup, mô hình Domain hoạt động theo kiến trúc mạng **Client - Server**. Trong đó, một nhóm máy tính mạng cùng chia sẻ cơ sở dữ liệu thư mục tập trung.
+
+![domain](/assets/img/other/network-admin-6.png)
+_**Hình 6. Mô hình Domain**_
+
+Việc quản lý và chứng thực người dùng mạng tập trung tại máy tính **Primary Domain Controller** (PDC). Domain controller (DC) là một Server quản lý tất cả các khía cạnh bảo mật của Domain. Các tài nguyên mạng cũng được quản lý tập trung và cấp quyền hạn cho từng người dùng. Lúc đó trong hệ thống có các máy tính chuyên dụng làm nhiệm vụ cung cấp các dịch vụ và quản lý các máy trạm. 
+
+Ngoài ra, để có thể backup phòng trường hợp PDC không hoạt động được hoặc có lỗi xảy thì có thể thêm vào các Domain Controler ở các máy server khác. Các Domain Controller thêm vào được gọi là **Additional Domain Controller** (ADC), chúng còn có vai trò giúp cân bằng tải trong trường hợp traffic cao. 
+
+Một loại DC khác nữa ta sẽ đề cập đó là **RODC - Read Only Domain Controller**. RODC cũng giống như các domain controller khác, ngoại trừ cơ sở dữ liệu Active Directory không thể ghi trực tiếp. RODC giúp làm giảm được một phần tải trọng của các máy chủ đầu cầu vì chỉ có lưu lượng bản sao gửi đến RODC là được cho phép, chứ các và tăng tính bảo mật vì người dùng kết nối với RODC không thể thay đổi bất cứ thứ gì trong cơ sở dữ liệu Active Directory. 
+
+**Active Directory** là một hệ thống quản trị người dùng tập trung được tích hợp trong các Windows server sử dụng mô hình Domain, cụ thể hơn là được đặt trên các DC. Active Directory dùng để lưu trữ dữ liệu của domain như các đối tượng user, computer, group cung cấp những dịch vụ (directory services) tìm kiếm, kiểm soát truy cập, ủy quyền, và đặc biệt là dịch vụ xác thực người dùng.
+
+> Mình tham khảo đề thi năm 2019 thì có hỏi một số lệnh liên quan tới Domain Controller. Nhưng trong quá trình học ở lớp thì mình không thấy nói gì đến các lệnh nào cả nên sẽ không viết về nội dung đó.
+{: .prompt-warning }
+
 ### Các dịch vụ trên Windows Server
+
+Windows Server cung cấp rất nhiều dịch vụ nhưng ở đây chúng ta sẽ chỉ nói một số dịch vụ tiêu biểu đó là DNS, DHCP, HTTP và FTP.
 
 ## V. Quản trị Linux
 
