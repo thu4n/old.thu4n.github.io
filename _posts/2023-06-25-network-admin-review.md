@@ -235,11 +235,11 @@ _**Hình 3. Topology mẫu sử dụng NAT**_
     ```
     R2(config)# ip nat inside source static 192.168.10.10 209.165.200.226
     R2(config)# interface s0/1/0
-    R2(config-if) ip nat inside
-    R2(config-if) exit
-    R2(config) interface s0/1/1
-    R2(config-if) ip nat outside
-    R2(config-if) exit
+    R2(config-if)# ip nat inside
+    R2(config-if)# exit
+    R2(config)# interface s0/1/1
+    R2(config-if)# ip nat outside
+    R2(config-if)# exit
     ```
     Câu lệnh đầu tiên chính là việc ánh xạ tĩnh địa chỉ inside local tới địa chỉ inside global với `192.168.10.10` là địa chỉ IP của PC. Sau đó, ta cấu hình interface liên kết với LAN ở chế độ `nat inside` còn interface đi ra Internet ở chế độ `nat outside`.
     + Dynamic NAT
@@ -248,11 +248,11 @@ _**Hình 3. Topology mẫu sử dụng NAT**_
     R2(config)# access-list 1 permit 192.168.0.0 0.0.255.255
     R2(config)# ip nat inside source list 1 pool NAT-POOL1
     R2(config)# interface s0/1/0
-    R2(config-if) ip nat inside
-    R2(config-if) exit
-    R2(config) interface s0/1/1
-    R2(config-if) ip nat outside
-    R2(config-if) exit
+    R2(config-if)# ip nat inside
+    R2(config-if)# exit
+    R2(config)# interface s0/1/1
+    R2(config-if)# ip nat outside
+    R2(config-if)# exit
     ```
     Câu lệnh đầu tiên dùng để định nghĩa một dãy các địa chỉ IP dùng cho việc chuyển đổi. Sau đó, tạo thêm một ACL để xác định những địa chỉ có dạng `192.168.X.X` mới cần được chuyển đổi (Khái niệm ACL sẽ nói ở phần nội dung của nó). Tạo xong ACL, ta ràng buộc nó vào danh sách địa chỉ IP nguồn inside - `ip nat inside source list`. Cuối cùng, cấu hình cho các interface tương tự như static NAT.
 
@@ -390,6 +390,10 @@ Như trong đoạn lệnh minh họa là ta cho interface `g0/0/0` của Router 
 Khi hoàn tất cấu hình, ta có thể kiểm tra lại với lệnh `show access-lists` để coi toàn bộ các ACL hiện có.
 
 ### DHCP
+
+DHCP - Dynamic Host Configuration Protocol thực hiện quản lý và cấp phát tự động các địa chỉ IP đến các thiết bị mạng bên trong một mạng. Nói cách khác, thay vì phải đi gán IP thủ công cho từng thiết bị trong mạng thì người quản trị chỉ việc cấu hình DHCP cho Router là được.
+
+Cấu hình DHCP thì trên lớp chỉ được dạy cấu hình cho máy server không phải Router nhưng bạn nào muốn biết thêm thì có thể tham khảo các lệnh cấu hình [tại đây](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/ipaddr_dhcp/configuration/15-sy/dhcp-15-sy-book/config-dhcp-server.html).
 
 ## IV. Quản trị Windows
 
