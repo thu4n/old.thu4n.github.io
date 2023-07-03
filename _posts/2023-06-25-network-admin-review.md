@@ -411,12 +411,26 @@ Router(dhcp-config)# exit
 Router(config)# service dhcp vlan1
 ```
 Câu lệnh đầu tiên là để khai báo dãy địa chỉ IP sẽ sử dụng trong DHCP. Các câu lệnh tiếp theo lần lượt là tạo pool DHCP, xác định subnet, tên miền, dns server và Router mặc định. Các DHCP client sẽ cần các thông tin này để yêu cầu cấp phát động địa chỉ IP. Cuối cùng, đưa DHCP vào hoạt động trên một interface mà ở đây là `vlan1`.
+
+Ngoài ra, trong trường hợp mạng có một DHCP server riêng biệt liên kết trực tiếp tới Router, ta có thể cấu hình cho Router làm trung gian giúp các host ở subnet khác gửi được DHCP request của mình tới server. Đây gọi là cấu hình `ip helper-address`, còn Router được cấu hình sẽ trở thành DHCP Relay Agent. Xét hình mình họa bên dưới, được cắt ra từ đề ôn tập năm 2019.
+
+![domain](/assets/img/other/network-admin-7.png)
+_**Hình 5. Mô hình minh họa có một DHCP server riêng biệt**_
+
+```
+Router(config)# interface Gi0/0
+Router(config-if)# ip helper-address 192.168.11.6
+Router(config-if)# exit
+```
+
+Khi cấu hình như thế, interface phải là interface liên kết với subnet của các host cần gửi DHCP request và địa chỉ được IP thì sẽ là địa chỉ của DHCP server.
+
 ## IV. Quản trị Windows
 
 ### Mô hình Workgroup
 
 <img src="/assets/img/other/network-admin-5.jpg" alt="drawing" width="450"/>
-_**Hình 5. Setup mô hình workgroup**_
+_**Hình 6. Setup mô hình workgroup**_
 
 Workgroup là một môi trường dành cho các văn phòng loại nhỏ hoạt động theo hình thức mạng LAN **Peer-to-Peer**. Nó là một nhóm các máy tính chia sẻ tài nguyên và quyền quản lí với nhau. Do đó, workgroup có thể được tạo với các PC thông thường mà không cần phải có thêm một server.
 
@@ -427,7 +441,7 @@ Mình không nghĩ đây sẽ là nội dung được hỏi nhiều trong thi n�
 Ngược lại với Workgroup, mô hình Domain hoạt động theo kiến trúc mạng **Client - Server**. Trong đó, một nhóm máy tính mạng cùng chia sẻ cơ sở dữ liệu thư mục tập trung.
 
 ![domain](/assets/img/other/network-admin-6.png)
-_**Hình 6. Mô hình Domain minh họa**_
+_**Hình 7. Mô hình Domain minh họa**_
 
 Việc quản lý và chứng thực người dùng mạng tập trung tại máy tính **Primary Domain Controller** (PDC). Domain controller (DC) là một Server quản lý tất cả các khía cạnh bảo mật của Domain. Các tài nguyên mạng cũng được quản lý tập trung và cấp quyền hạn cho từng người dùng. Lúc đó trong hệ thống có các máy tính chuyên dụng làm nhiệm vụ cung cấp các dịch vụ và quản lý các máy trạm. 
 
@@ -471,13 +485,13 @@ Còn nhiều loại record khác nữa nhưng mình nghĩ biết 4 anh trên là
 1. Thiết lập địa chỉ DNS server trong network setting
 2. Dùng lệnh `nslookup` trong terminal để xem lại đã tham gia vào domain chưa
 
-**HTTP và FTP**
+**Các dịch vụ khác**
 
-(Mình không tìm thấy phần lý thuyết trong môn học để nói về 2 anh này, chắc là không có trong thi??)
+~~Mình kiếm không ra để nói~~ . Hóa ra là mình bị mù quáng, có slide nói về quản trị Windows bao gồm chi tiết các dịch vụ mà nó cung cấp. Mình sẽ để link ở phần [Nguồn tham khảo](#viii-nguồn-tham-khảo) do bài viết này quá dài rồi.
 
 ## V. Quản trị Linux
 
-Với Quản trị Linux, thì mình tham khảo chủ yếu là hỏi một số lệnh thiết yếu nhưng như vậy là cũng đủ nhiều rồi (nếu không muốn nói là quá nhiều). Bên dưới mình sẽ chỉ list các keyword, lệnh nào quan trọng thì mình sẽ đính kèm thêm link chứ không thể đặc tả chi tiết cách sử dụng từng lệnh được do quá dài.
+Với Quản trị Linux, thì mình tham khảo chủ yếu là hỏi một số lệnh thiết yếu nhưng như vậy là cũng đủ nhiều rồi (nếu không muốn nói là quá nhiều). Bên dưới mình sẽ chỉ list các keyword, lệnh nà mình cảm thấy quan trọng thì mình sẽ đính kèm thêm link chứ không thể đặc tả chi tiết cách sử dụng từng lệnh được do quá dài. Ngoài ra, mình cũng sẽ để link tới tài liệu Quản trị Linux ở phần [Nguồn tham khảo](#viii-nguồn-tham-khảo) luôn.
 
 ### Tương tác với thư mục cơ bản
 
@@ -512,13 +526,13 @@ Với Quản trị Linux, thì mình tham khảo chủ yếu là hỏi một s�
 
 ## VI. Basic Network Troubleshooting
 
-Phần nội dung này cũng chính là phần nội dung tự luận. Những gì mình viết sẽ là góc nhìn cá nhân trong việc troubleshoot chứ không phải là cách hoàn hảo, làm theo là đúng.
+Phần nội dung này cũng chính là phần nội dung chính trong phần thi tự luận. Những gì mình viết sẽ là góc nhìn cá nhân trong việc troubleshoot chứ không phải là cách hoàn hảo, làm theo là đúng.
 
 Trước khi xem xét các vấn đề khác thì luôn kiểm tra xem cấu hình địa chỉ IP cho các thiết bị trong mạng đã đúng hết chưa, có cùng một subnet hay chưa và đảm bảo là các interface cần sử dụng đều đang ở trạng thái `on` đã cấu hình `no shutdown`.
 ### Vấn đề liên quan tới dịch vụ mạng
 
 Đề thường sẽ nói như sau: "Mạng này đang chạy dịch vụ X, song PC A không sử dụng được dịch vụ X" => Khả năng cao là Router chạy dịch vụ đó được cấu hình sai, cần xem kĩ lại các lệnh.
-- Host không nhận được địa chỉ IP -> **DHCP**: Xem lại dãy địa chỉ IP trong network pool đã khai báo đúng hoặc đủ chưa, địa chỉ IP-helper đã chính xác chưa.
+- Host không nhận được địa chỉ IP -> **DHCP**: Xem lại dãy địa chỉ IP trong network pool đã khai báo đúng hoặc đủ chưa, cấu hình ip-helper đã đúng interface hay chưa
 - Traffic của host bị chặn bất thường, các host không giao tiếp được -> **ACL**: Cấu hình `inbound` hoặc là `outbound` đã hợp lý chưa, xem lại vị trí đặt ACL trong mạng đã đúng chưa là 2 chuyện ưu tiên nhất. Nếu không có gì thì ta mới xét tới thứ tự các entry và tính hợp lệ của các entry đó.
 - Host đi ra internet không được -> **NAT**: Kiểm tra lại interface `in` và interface `out` đã đúng chiều chưa. Còn lại là phụ thuộc vào việc đã cấp đủ số địa chỉ IP inside global để phục vụ số lượng thiết bị trong mạng hay chưa.
 
@@ -531,8 +545,18 @@ Nếu đề không nói chạy dịch vụ mạng nào hết, chỉ nói các ho
 - Đối với định tuyến tĩnh, ta chỉ cần nhớ là có đường đi thì phải có đường về. Bạn cấu hình route từ A đến B thì cũng phải cấu hình route từ B đến A mới nói chuyện được.
 - Đối với định tuyến động và định tuyến các VLAN, lỗi mình thường thấy là cấu hình lộn interface với địa chỉ IP (không rõ có gì khác nữa không...)
 
+## VII. Tổng kết và một số lưu ý
 
-## VII. Nguồn tham khảo
-1. Tài liệu môn học của UIT.
+Trong bài viết này, có thể mình bỏ qua khá nhiều chi tiết nhưng do thời gian có hạn (còn ôn mấy môn khác nữa) nên mình chỉ viết tới đây. Một số kiến thức khác như cách **chia mạng con**, cách viết rule trong `iptables` hoặc cách đọc thông tin định tuyến qua lệnh `show ip route` với `show ip interface brief`, mình là nghĩ khá cần thiết và nên xem qua (ghi vô tờ A4 luôn cho chắc).
+
+Nhìn độ dài của một bài viết còn thiếu nội dung này, ta kết luận rõ rệt là không thể nhét hết vô một tờ A4 được (hoặc chỉ là vấn đề kĩ năng). Nên mình khuyến khích là chỉ ghi những nội dung thực sự dài và khó nhớ, cái nào đã nắm chắc thì khỏi ghi để chừa chỗ trống cho mấy anh nào khoai hơn. Ngoài ra, có thể chia tờ A4 thành **nhiều cột** để tăng diện tích viết chữ lên một tí.
+
+Và đây cũng là kết thúc cho bài viết chia sẻ nho nhỏ của mình, rất cảm ơn những ai đã đọc được đến đây và chúc các bạn có một kỳ thi cuối kỳ tốt đẹp 🎉.
+## VIII. Nguồn tham khảo
+1. Tài liệu lý thuyết và thực hành của môn học Quản trị mang và hệ thống, UIT.
 2. [DHCP Configuration by Cisco](https://www.cisco.com/c/en/us/td/docs/routers/ir910/software/release/1_2/configuration/guide/ir910scg/swdhcp.pdf)
 3. Tài liệu của Cisco nói chung.
+4. Đề ôn tập môn học Quản trị mạng và hệ thống,
+5. [Tài liệu Quản trị Windows](https://drive.google.com/file/d/1X1Sfj5IZqKlYxopSoK1vsD9-m-QpCtBp/view?usp=sharing)
+6. [Tài liệu Quản trị Linux](https://drive.google.com/file/d/1jvCpfiJ4MPNSbmv5AJXtb2BG8PutOEp4/view?usp=sharing)
+7. [Video bài giảng môn học của cô Trần Thị Dung](https://youtube.com/playlist?list=PLgN0LjU9JK-qEr52DVA6SIGSGM3mge7HF)
