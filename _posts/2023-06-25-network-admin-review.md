@@ -393,6 +393,12 @@ Khi hoàn tất cấu hình, ta có thể kiểm tra lại với lệnh `show ac
 
 DHCP - Dynamic Host Configuration Protocol thực hiện quản lý và cấp phát tự động các địa chỉ IP đến các thiết bị mạng bên trong một mạng. Nói cách khác, thay vì phải đi gán IP thủ công cho từng thiết bị trong mạng thì người quản trị chỉ việc cấu hình DHCP cho Router là được.
 
+Router được cấu hình DHCP sẽ coi như là DHCP server (cũng có thể là DHCP relay agent nhưng sẽ không nói chi tiết ở đây), còn các host trong mạng sẽ là các DHCP client. Việc trao đổi thông tin và cấp phát địa chỉ IP giữa 2 bên được chia thành 4 giai đoạn như sau:
+1. DHCP DISCOVER - Client broadcats gói tin để tìm kiếm địa chỉ IP của DHCP server.
+2. DHCP OFFER - Server nhận được và phản hồi với một "offer" gồm các địa chỉ IP khả dụng cho client.
+3. DHCP REQUEST - Client broadcast thông điệp trong đó có bao gồm thông tin địa chỉ IP mong muốn
+4. DHCP ACK/NAK - Server trả về ACK nếu địa chỉ IP đó vẫn còn khả dụng hoặc NAK nếu không khả dụng nữa.
+
 Lý thuyết DHCP thì mình thấy không đề cập quá nhiều nên ta đi thẳng vào cách cấu hình luôn:
 ```
 Router(config)# ip dhcp included-address 192.168.1.101 192.168.1.150
@@ -421,13 +427,15 @@ Mình không nghĩ đây sẽ là nội dung được hỏi nhiều trong thi n�
 Ngược lại với Workgroup, mô hình Domain hoạt động theo kiến trúc mạng **Client - Server**. Trong đó, một nhóm máy tính mạng cùng chia sẻ cơ sở dữ liệu thư mục tập trung.
 
 ![domain](/assets/img/other/network-admin-6.png)
-_**Hình 6. Mô hình Domain**_
+_**Hình 6. Mô hình Domain minh họa**_
 
 Việc quản lý và chứng thực người dùng mạng tập trung tại máy tính **Primary Domain Controller** (PDC). Domain controller (DC) là một Server quản lý tất cả các khía cạnh bảo mật của Domain. Các tài nguyên mạng cũng được quản lý tập trung và cấp quyền hạn cho từng người dùng. Lúc đó trong hệ thống có các máy tính chuyên dụng làm nhiệm vụ cung cấp các dịch vụ và quản lý các máy trạm. 
 
 Ngoài ra, để có thể backup phòng trường hợp PDC không hoạt động được hoặc có lỗi xảy thì có thể thêm vào các Domain Controler ở các máy server khác. Các Domain Controller thêm vào được gọi là **Additional Domain Controller** (ADC), chúng còn có vai trò giúp cân bằng tải trong trường hợp traffic cao. 
 
 Một loại DC khác nữa ta sẽ đề cập đó là **RODC - Read Only Domain Controller**. RODC cũng giống như các domain controller khác, ngoại trừ cơ sở dữ liệu Active Directory không thể ghi trực tiếp. RODC giúp làm giảm được một phần tải trọng của các máy chủ đầu cầu vì chỉ có lưu lượng bản sao gửi đến RODC là được cho phép, chứ các và tăng tính bảo mật vì người dùng kết nối với RODC không thể thay đổi bất cứ thứ gì trong cơ sở dữ liệu Active Directory. 
+
+Các loại DC giới thiệu ở trên đều cần người quản trị cấu hình cho server của mình, nếu không, một Windows server mặc định sẽ hoạt động ở chế độ "stand-alone".
 
 **Active Directory** là một hệ thống quản trị người dùng tập trung được tích hợp trong các Windows server sử dụng mô hình Domain, cụ thể hơn là được đặt trên các DC. Active Directory dùng để lưu trữ dữ liệu của domain như các đối tượng user, computer, group cung cấp những dịch vụ (directory services) tìm kiếm, kiểm soát truy cập, ủy quyền, và đặc biệt là dịch vụ xác thực người dùng.
 
@@ -436,14 +444,95 @@ Một loại DC khác nữa ta sẽ đề cập đó là **RODC - Read Only Doma
 
 ### Các dịch vụ trên Windows Server
 
-Windows Server cung cấp rất nhiều dịch vụ nhưng ở đây chúng ta sẽ chỉ nói một số dịch vụ tiêu biểu đó là DNS, DHCP, HTTP và FTP.
+Windows Server cung cấp rất nhiều dịch vụ nhưng ở đây chúng ta sẽ chỉ nói một số dịch vụ tiêu biểu đó là DNS, HTTP và FTP.
+
+**DNS**
+
+Viết tắt của Domain Name System, được hiểu là hệ thống phân giải tên miền. Đây là một hệ thống chuyển đổi các tên miền website, chuyển từ dạng www.<tenmien>.com sang dạng địa chỉ IP tương ứng với tên miền và ngược lại. Bên cạnh đó, các thao tác này có DNS có vai trò lớn trong liên kết các thiết bị mạng với nhau trong việc định vị và gán địa chỉ cụ thể cho các thông tin trên internet.
+
+Trong DNS, có các record (bản ghi) với các chức năng khác nhau như sau:
+- NS - Name Server, chứa địa chỉ IP của DNS server cùng với một số thông tin về domain.
+- A - Address, dùng để ánh xạ từ một domain thành địa chỉ IP cho phép có thể truy cập website.
+- PTR - Pointer, chuyển đổi tền miền thành địa chỉ IP.
+- CNAME - Canonical Name hay còn gọi là bí danh, cho phép người dùng truy cập tài nguyên thông qua các bí danh này. Một tên miền có thể có nhiều bí danh.
+- MX - Chuyển tiếp mail đến domain.
+
+Còn nhiều loại record khác nữa nhưng mình nghĩ biết 4 anh trên là đủ đi thi rồi.
+
+Để cài đặt và cấu hình vụ DNS trên Windows server, ta thực hiện các bước như sau:
+- Phía server
+1. Thiết lập địa chỉ IP cho server và địa chỉ DNS server theo địa chỉ IP đó
+2. Thiết lập DNS suffix (hậu tố, dạng như `thu4n.x.y` thì `x.y` chính là hậu tố)
+3. Kích hoạt dịch vụ DNS trong Dashboard
+4. Tạo Forward Lookup Zone để phân giải tên miền ra địa chỉ IP
+5. Tạo Reverse Lookup Zone để dịch ngược từ địa chỉ IP ra tên miền
+
+- Phía client
+1. Thiết lập địa chỉ DNS server trong network setting
+2. Dùng lệnh `nslookup` trong terminal để xem lại đã tham gia vào domain chưa
+
+**HTTP và FTP**
+
+(Mình không tìm thấy phần lý thuyết trong môn học để nói về 2 anh này, chắc là không có trong thi??)
 
 ## V. Quản trị Linux
 
-### Tương tác với file và thư mục
+Với Quản trị Linux, thì mình tham khảo chủ yếu là hỏi một số lệnh thiết yếu nhưng như vậy là cũng đủ nhiều rồi (nếu không muốn nói là quá nhiều). Bên dưới mình sẽ chỉ list các keyword, lệnh nào quan trọng thì mình sẽ đính kèm thêm link chứ không thể đặc tả chi tiết cách sử dụng từng lệnh được do quá dài.
 
-### Các lệnh thường dùng trong Linux
+### Tương tác với thư mục cơ bản
+
+- `pwd` - Coi mình đang ở trong đường dẫn thư mục nào.
+- `ls` - Liệt kê nội dung của thư mục hiện tại ra.
+    + `ls -a` - Liệt kê toàn bộ nội dung, bao gồm các file bị ẩn
+    + `ls -l` - Liệt kê thông tin chi tiết của các nội dung
+- `mkdir` - Tạo thư mục kèm tên thư mục đó
+- `cd` - Di chuyển đến một thư mục nào đó
+    + `cd` hoặc `cd ~` hoặc `cd ~/` - Trở về thư mục `/home`
+    + `cd ..` - Trở về thư mục cha
+- `rmdir` - Xóa một thư mục **rỗng**
+
+### Tương tác với file cơ bản
+- `touch` - Tạo một file rỗng (Không phải công dụng chính của nó).
+- `echo` - Viết đối số cho output tiêu chuẩn.
+- `cat` - Hiển thị nội dung của file.
+- `wc` - Đếm số dòng, số từ và số kí tự của một file văn bản.
+- `cp` - Copy nội dung file qua một file khác.
+- `mv` - Copy nội dung file nguồn đến một chỗ khác rồi xóa nội dung nguồn đó.
+- `rm` - Xóa file (hoặc thư mục).
+- `grep` - In ra các dòng trong file có nội dung khớp một pattern nào đó (nói cách khác là tìm kiếm).
+- `chmod` - Thay đổi các quyền Read, Write và Execute của một file. Xem thêm cách sử dụng [tại đây](https://www.geeksforgeeks.org/chmod-command-linux/).
+
+### Các lệnh liên quan đến network
+- `ifconfig` - Xem các cấu hình interface của máy bao gồm địa chỉ IP, địa chỉ MAC và MTU.
+- `iptables` - Thiết lập các network rule. Xem thêm cách sử dụng [tại đây](https://www.geeksforgeeks.org/iptables-command-in-linux-with-examples/).
+- `ufw` - Cấu hình firewall trên Ubuntu. Xem thêm cách sử dụng [tại đây](https://learnubuntu.com/ufw-commands/).
+- `nslookup` - Truy vấn DNS.
+- `route` - Hiển thị routing table.
+- `traceroute`- Xác định route đi đến một destination nào đó.
 
 ## VI. Basic Network Troubleshooting
 
+Phần nội dung này cũng chính là phần nội dung tự luận. Những gì mình viết sẽ là góc nhìn cá nhân trong việc troubleshoot chứ không phải là cách hoàn hảo, làm theo là đúng.
+
+Trước khi xem xét các vấn đề khác thì luôn kiểm tra xem cấu hình địa chỉ IP cho các thiết bị trong mạng đã đúng hết chưa, có cùng một subnet hay chưa và đảm bảo là các interface cần sử dụng đều đang ở trạng thái `on` đã cấu hình `no shutdown`.
+### Vấn đề liên quan tới dịch vụ mạng
+
+Đề thường sẽ nói như sau: "Mạng này đang chạy dịch vụ X, song PC A không sử dụng được dịch vụ X" => Khả năng cao là Router chạy dịch vụ đó được cấu hình sai, cần xem kĩ lại các lệnh.
+- Host không nhận được địa chỉ IP -> **DHCP**: Xem lại dãy địa chỉ IP trong network pool đã khai báo đúng hoặc đủ chưa, địa chỉ IP-helper đã chính xác chưa.
+- Traffic của host bị chặn bất thường, các host không giao tiếp được -> **ACL**: Cấu hình `inbound` hoặc là `outbound` đã hợp lý chưa, xem lại vị trí đặt ACL trong mạng đã đúng chưa là 2 chuyện ưu tiên nhất. Nếu không có gì thì ta mới xét tới thứ tự các entry và tính hợp lệ của các entry đó.
+- Host đi ra internet không được -> **NAT**: Kiểm tra lại interface `in` và interface `out` đã đúng chiều chưa. Còn lại là phụ thuộc vào việc đã cấp đủ số địa chỉ IP inside global để phục vụ số lượng thiết bị trong mạng hay chưa.
+
+Trong cả 3 anh trên, ta đều phải đảm bảo interface của Router có đang chạy dịch vụ đó.
+
+### Vấn đề liên quan tới định tuyến
+
+Nếu đề không nói chạy dịch vụ mạng nào hết, chỉ nói các host không giao tiếp được với nhau như mong muốn thì ta chỉ xét về định tuyến. Điều đầu tiên cần là đảm bảo các thiết bị đang chạy cùng một chế độ định tuyến với nhau, một anh chạy RIP thì làm sao nói chuyện được với anh kia chỉ chạy OSPF.
+
+- Đối với định tuyến tĩnh, ta chỉ cần nhớ là có đường đi thì phải có đường về. Bạn cấu hình route từ A đến B thì cũng phải cấu hình route từ B đến A mới nói chuyện được.
+- Đối với định tuyến động và định tuyến các VLAN, lỗi mình thường thấy là cấu hình lộn interface với địa chỉ IP (không rõ có gì khác nữa không...)
+
+
 ## VII. Nguồn tham khảo
+1. Tài liệu môn học của UIT.
+2. [DHCP Configuration by Cisco](https://www.cisco.com/c/en/us/td/docs/routers/ir910/software/release/1_2/configuration/guide/ir910scg/swdhcp.pdf)
+3. Tài liệu của Cisco nói chung.
