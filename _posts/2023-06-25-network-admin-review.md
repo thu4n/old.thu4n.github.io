@@ -33,7 +33,7 @@ Thông tin về bài thi:
 
 **Nhận xét:** 75 phút cho 25 câu trắc nghiệm và 3 câu tự luận, thật sự là mình thấy hơi ít và khoai. Đề có câu hỏi mở nên tờ A4 dù có soạn kĩ thì chắc là cũng sẽ không ăn thua với nó, trừ khi ăn hên. 
 
-Với những nội dung trên, mình sẽ chia nội dung ôn tập thành 3 phần với 2 phần nội dung lý thuyết và một phần đoán mò mấy câu tự luận.
+Với những nội dung trên, mình sẽ chia nội dung ôn tập thành 5 phần với 4 phần nội dung lý thuyết và một phần đoán mò mấy câu tự luận.
 
 ## II. Định tuyến
 Định tuyến là quá trình chọn lựa các đường đi trên một mạng máy tính để gửi dữ liệu qua đó. Phần lý thuyết này sẽ bao gồm 2 trường hợp định tuyến đó là giữa các LAN với nhau và giữa các VLAN với nhau.
@@ -447,7 +447,7 @@ Việc quản lý và chứng thực người dùng mạng tập trung tại má
 
 Ngoài ra, để có thể backup phòng trường hợp PDC không hoạt động được hoặc có lỗi xảy thì có thể thêm vào các Domain Controler ở các máy server khác. Các Domain Controller thêm vào được gọi là **Additional Domain Controller** (ADC), chúng còn có vai trò giúp cân bằng tải trong trường hợp traffic cao. 
 
-Một loại DC khác nữa ta sẽ đề cập đó là **RODC - Read Only Domain Controller**. RODC cũng giống như các domain controller khác, ngoại trừ cơ sở dữ liệu Active Directory không thể ghi trực tiếp. RODC giúp làm giảm được một phần tải trọng của các máy chủ đầu cầu vì chỉ có lưu lượng bản sao gửi đến RODC là được cho phép, chứ các và tăng tính bảo mật vì người dùng kết nối với RODC không thể thay đổi bất cứ thứ gì trong cơ sở dữ liệu Active Directory. 
+Một loại DC khác nữa ta sẽ đề cập đó là **RODC - Read Only Domain Controller**. RODC cũng giống như các domain controller khác, ngoại trừ cơ sở dữ liệu Active Directory không thể ghi trực tiếp. RODC giúp làm giảm được một phần tải trọng của các máy chủ đầu cầu vì chỉ có lưu lượng bản sao gửi đến RODC là được cho phép, đồng thời tăng tính bảo mật vì người dùng kết nối với RODC không thể thay đổi bất cứ thứ gì trong cơ sở dữ liệu Active Directory. 
 
 Các loại DC giới thiệu ở trên đều cần người quản trị cấu hình cho server của mình, nếu không, một Windows server mặc định sẽ hoạt động ở chế độ "stand-alone".
 
@@ -556,7 +556,7 @@ Và đây cũng là kết thúc cho bài viết chia sẻ nho nhỏ của mình,
 1. Tài liệu lý thuyết và thực hành của môn học Quản trị mang và hệ thống, UIT.
 2. [DHCP Configuration by Cisco](https://www.cisco.com/c/en/us/td/docs/routers/ir910/software/release/1_2/configuration/guide/ir910scg/swdhcp.pdf)
 3. Tài liệu của Cisco nói chung.
-4. Đề ôn tập môn học Quản trị mạng và hệ thống,
+4. [Đề ôn tập môn học Quản trị mạng và hệ thống](https://drive.google.com/file/d/1FX2EDhtDeyG-UiprXzLBINpnz1UkKYoK/view?usp=sharing).
 5. [Tài liệu Quản trị Windows](https://drive.google.com/file/d/1X1Sfj5IZqKlYxopSoK1vsD9-m-QpCtBp/view?usp=sharing)
 6. [Tài liệu Quản trị Linux](https://drive.google.com/file/d/1jvCpfiJ4MPNSbmv5AJXtb2BG8PutOEp4/view?usp=sharing)
 7. [Video bài giảng môn học của cô Trần Thị Dung](https://youtube.com/playlist?list=PLgN0LjU9JK-qEr52DVA6SIGSGM3mge7HF)
