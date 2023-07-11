@@ -13,6 +13,10 @@ description: Những nội dung chính nên ghi vào tờ tài liệu A4 cho bà
 
 Chào các bạn, mục tiêu của bài viết này là tóm tắt lại kiến thức của môn học Quản trị mạng và hệ thống của UIT. Qua đó, ta có thể phần nào hình dung được nên ghi những gì vào tài liệu **duy nhất** được phép sử dụng trong phòng thi - một tờ A4 viết tay (không được phép in hoặc photo). Các kiến thức được mình tổng hợp từ tài liệu của trường và một số nguồn khác, mình sẽ để trích dẫn ở cuối bài viết.
 
+> Sau khi thi xong thì mình đã tổng hợp thêm một số kiến thức mà bài blog này chưa bao gồm. Các bạn có thể tham khảo thêm qua [link này (đề năm học 2022-2023)](https://docs.google.com/document/d/1sL_DE1jFxe2PJxqRmqirkHS-zu1IvtU1S5yHuvVyVYE/edit?usp=sharing).
+{: .prompt-tip }
+
+
 Thông tin về bài thi:
 
 1. Hình thức thi: Trắc nghiệm (5 điểm) và Tự luận (5 điểm)
