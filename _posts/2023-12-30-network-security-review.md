@@ -10,7 +10,7 @@ tags: [computer network, network security, sysadmin]
 Xin chào các bạn, trong bài viết lần này mình sẽ cố gắng tóm tắt về môn học NT101 - An toàn mạng máy tính theo chương trình giảng dạy cho lớp Mạng tại UIT. Nội dung khá là dài nhưng thầy đã rộng lượng cho tận **2 tờ A4** thì có vẻ sẽ đủ, thời gian làm bài nếu mình nhớ không lầm thì đâu đó khoảng **75 phút**. Nôm na là thế, chúng ta sẽ có **8 chương** tổng cộng cần phải ôn tập nên mình vô thẳng nội dung chính luôn thôi.
 ## I. Tổng quan
 
-### 1 - Một số khái niệm
+### A. Một số khái niệm
 
 #### Dữ liệu
 
@@ -27,7 +27,8 @@ Khi trao đổi dữ liệu, có 4 yêu cầu như sau:
 #### Một số khái niệm khác
 
 - Tam giác bảo mật bao gồm 3 thành phần là **Security** (Restrictions), **Functionality**(Features) và **Usability**(GUI). Khi ta thiên về một thành phần nào thì 2 thành phần còn lại trong tam giác sẽ bị yếu đi. VD: Tăng tính bảo mật thì sẽ hạn chế hơn về tính năng và giao diện ít thân thiện người dùng hơn, ngược lại, nếu thêm nhiều tính năng mới thì dễ có lỗ hỏng bảo mật và người dùng sẽ gặp khó khăn hơn khi mới sử dụng lần đầu.
-### 2 - Các kỹ thuật tấn công phổ biến và cơ chế phòng thủ
+
+### B. Các kỹ thuật tấn công phổ biến và cơ chế phòng thủ
 
 #### 2.1. Eavesdropping (Nghe trộm)
 
@@ -56,7 +57,7 @@ Một hình thức tấn công mạng nhằm đánh cắp mật khẩu của ng�
 **2.3.4. Password Sniffing**
 
 
-### 3 - Lý lịch của những kẻ tấn công
+### C. Lý lịch của những kẻ tấn công
 
 ### 4 - Mô hình bảo mật cơ bản
 
