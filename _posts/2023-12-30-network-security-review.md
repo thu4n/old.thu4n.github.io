@@ -47,6 +47,8 @@ Một hình thức tấn công mạng nhằm đánh cắp mật khẩu của ng�
 
 **2.3.1. Guessing**
 
+- Đúng như tên của nó, đây là đoán mật khẩu, hiệu quả khi đối phương có mật khẩu ngắn hoặc đang sử dụng mật khẩu mặc định.
+
 **2.3.2. Social engineering**
 
 **2.3.3. Dictionary Attacks**
