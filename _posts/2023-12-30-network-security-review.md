@@ -10,7 +10,7 @@ tags: [computer network, network security, sysadmin]
 Xin chào các bạn, trong bài viết lần này mình sẽ cố gắng tóm tắt về môn học NT101 - An toàn mạng máy tính theo chương trình giảng dạy cho lớp Mạng tại UIT. Nội dung khá là dài nhưng thầy đã rộng lượng cho tận **2 tờ A4** thì có vẻ sẽ đủ, thời gian làm bài nếu mình nhớ không lầm thì đâu đó khoảng **75 phút**. Nôm na là thế, chúng ta sẽ có **8 chương** tổng cộng cần phải ôn tập nên mình vô thẳng nội dung chính luôn thôi.
 ## I. Tổng quan
 
-### 1. Một số khái niệm
+### 1 - Một số khái niệm
 
 #### Dữ liệu
 
@@ -27,13 +27,14 @@ Khi trao đổi dữ liệu, có 4 yêu cầu như sau:
 #### Một số khái niệm khác
 
 - Tam giác bảo mật bao gồm 3 thành phần là **Security** (Restrictions), **Functionality**(Features) và **Usability**(GUI). Khi ta thiên về một thành phần nào thì 2 thành phần còn lại trong tam giác sẽ bị yếu đi. VD: Tăng tính bảo mật thì sẽ hạn chế hơn về tính năng và giao diện ít thân thiện người dùng hơn, ngược lại, nếu thêm nhiều tính năng mới thì dễ có lỗ hỏng bảo mật và người dùng sẽ gặp khó khăn hơn khi mới sử dụng lần đầu.
-### 2. Các kỹ thuật tấn công phổ biến và cơ chế phòng thủ
+### 2 - Các kỹ thuật tấn công phổ biến và cơ chế phòng thủ
 
 #### 2.1. Eavesdropping (Nghe trộm)
 
 - Cách thức tấn công: Sử dụng một thiết bị mạng (router, card mạng…) và một ứng dụng (Tcpdump, Ethereal, Wireshark…) để giám sát lưu lượng mạng, bắt các gói tin đi qua thiết bị này. Từ đó, "nghe trộm" được thông tin từ các phiên trao đổi dữ liệu.
 - Nhận xét: Thực hiện dễ dàng hơn với mạng không dây. **Không** có cách nào ngăn chận việc nghe trộm trong một mạng công cộng.
 - Cách phòng chống: Mã hoá dữ liệu trước khi truyền chúng trên mạng.
+
 #### 2.2. Cryptanalysis
 
 - Cách thức tấn công: Sử dụng một hoặc nhiều phương pháp khác nhau để tìm kiếm thông tin hữu ích từ dữ liệu đã mã hoá mà không cần biết khoá giải mã. Điển hình là phương pháp giải mã thông qua thống kê **tần suất xuất hiện** của các ký tự.
@@ -53,91 +54,91 @@ Một hình thức tấn công mạng nhằm đánh cắp mật khẩu của ng�
 **2.3.4. Password Sniffing**
 
 
-### 3. Lý lịch của những kẻ tấn công
+### 3 - Lý lịch của những kẻ tấn công
 
-### 4. Mô hình bảo mật cơ bản
+### 4 - Mô hình bảo mật cơ bản
 
 ## II. Malware
 
-### 1. Trojan
+### 1 - Trojan
 
-### 2. Phòng chống Trojan
+### 2 - Phòng chống Trojan
 
-### 3. Virus và các kỹ thuật của Virus
+### 3 - Virus và các kỹ thuật của Virus
 
-### 4. Phòng chống Virus
+### 4 - Phòng chống Virus
 
 ## III. Các giải thuật mã hóa
 
-### 1. Giới thiệu về mã hóa
+### 1 - Giới thiệu về mã hóa
 
-### 2. Giải thuật mã hóa cổ điển
+### 2 - Giải thuật mã hóa cổ điển
 
-### 3. Giải thuật mã hóa hiện đại
+### 3 - Giải thuật mã hóa hiện đại
 
-### 5. Bẻ gãy một hệ thống mật mã
+### 5 - Bẻ gãy một hệ thống mật mã
 
 ## IV. Mã hóa công khai và quản lý khóa
 
-### 1. Hệ mã hoá khoá công khai
+### 1 - Hệ mã hoá khoá công khai
 
-### 2. Giao thức trao đổi khoá Diffie-Hellman
+### 2 - Giao thức trao đổi khoá Diffie-Hellman
 
-### 3. Hệ RSA
+### 3 - Hệ RSA
 
-### 4. Quản lý khoá
+### 4 - Quản lý khoá
 
 ## V. Chứng thực dữ liệu
 
-### 1. Mã chứng thực thông điệp
+### 1 - Mã chứng thực thông điệp
 
-### 2. Hàm băm
+### 2 - Hàm băm
 
-### 3. Chữ ký số
+### 3 - Chữ ký số
 
 ## VI. Giao thức bảo mật mạng
 
-### 1. Vị trí của mật mã trong mạng máy tính
+### 1 - Vị trí của mật mã trong mạng máy tính
 
-### 2. Cơ sở hạ tầng khoá công khai
+### 2 - Cơ sở hạ tầng khoá công khai
 
-### 3. IPsec
+### 3 - IPsec
 
-### 4. SSL/TLS
+### 4 - SSL/TLS
 
-### 5. PGP và S/MIME
+### 5 - PGP và S/MIME
 
-### 6. Kerberos
+### 6 - Kerberos
 
-### 7. SSH
+### 7 - SSH
 
 ## VII. Bảo mật mạng không dây
 
-### 1. Tổng quan và phân loại
+### 1 - Tổng quan và phân loại
 
-### 2. Các kiểu chứng thực
+### 2 - Các kiểu chứng thực
 
-### 3. WEP, WPA và WPA2
+### 3 - WEP, WPA và WPA2
 
-### 4. Các mối đe dọa
+### 4 - Các mối đe dọa
 
-### 5. Phương pháp và công cụ tấn công
+### 5 - Phương pháp và công cụ tấn công
 
-### 6. Tấn công mạng Bluetooth
+### 6 - Tấn công mạng Bluetooth
 
-### 7. Biện pháp phòng chống
+### 7 - Biện pháp phòng chống
 
-### 8. Công cụ bảo mật Wi-Fi
+### 8 - Công cụ bảo mật Wi-Fi
 
-### 9. Kiểm thử hệ thống
+### 9 - Kiểm thử hệ thống
 
 ## VIII. Bảo mật mạng ngoại vi
 
-### 1. Tổng quan
-### 2. Bộ lọc gói tin (Packet Filters)
-### 3. Cổng mạch (Circuit Gateways)
-### 4. Cổng ứng dụng (Application Gateways)
-### 5. Bastion Hosts
-### 6. Cấu hình tường lửa
-### 7. Chuyển dịch địa chỉ mạng (NAT)
-### 8. TMG – Threat Management Gateway
+### 1 - Tổng quan
+### 2 - Bộ lọc gói tin (Packet Filters)
+### 3 - Cổng mạch (Circuit Gateways)
+### 4 - Cổng ứng dụng (Application Gateways)
+### 5 - Bastion Hosts
+### 6 - Cấu hình tường lửa
+### 7 - Chuyển dịch địa chỉ mạng (NAT)
+### 8 - TMG – Threat Management Gateway
