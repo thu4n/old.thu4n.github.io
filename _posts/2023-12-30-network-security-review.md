@@ -511,11 +511,221 @@ Các phương pháp quét chuẩn bao gồm:
 
 ## V. Chứng thực dữ liệu
 
-### A. Mã chứng thực thông điệp
+*Được tổng hợp bởi [howtodie123](https://github.com/howtodie123).*
 
-### B. Hàm băm
+### A. Tổng quan
 
-### C. Chữ ký số
+#### 1. Vai trò:
+
+- **Chứng thực** (authentication) nhằm: 
+  + Xác nhận nguồn gốc dữ liệu 
+  + Thuyết phục người dùng là dữ liệu này chưa bị sửa đổi hay giả mạo
+- Chứng thực là cơ chế quan trọng để duy trì tính toàn vẹn và không thể từ chối của dữ liệu.
+
+#### 2. Các phương pháp:
+
+-	**Mã hóa thông điệp:** sử dụng khóa bí mật và khóa công khai để mã hóa thông điệp
+-	**Mã chứng thực thông điệp** (MAC – Message Authen Code): một hàm và một khóa bí mật tạo ra 1 giá trị có chiều dài cố định sử dụng để chứng thực
+-	**Hàm băm** (Hash function): Ánh xạ một thông điệp vào một giá trị băm có chiều dài cố định để chứng thực.
+
+#### 3. Chứng thực thông qua nhận dạng:
+
+- Sử dụng các yếu tố nhận dạng như Password,PIN ,Smart card,Biometric: Vân tay, võng mạc,Chữ kí,...
+
+#### 4. Ví dụ về chứng thực:
+
+- Giả sử Alice và Bob chia sẻ một khoá bí mật chung **K**. Alice muốn gởi một chuỗi dữ liệu **M** cho Bob và thuyết phục Bob rằng **M** thực sự đến từ Alice và không bị sửa trong quá trình truyền. Điều này có thể thực hiện như sau:
+- Alice gởi **M** cùng với **C** cho Bob, với **C=EK(M) và E** là một giải thuật mã hoá thông thường đã quy ước trước giữa Alice và Bob.
+- Do chỉ có Alice và Bob biết **K**, Bob có thể sử dụng **K** để giải mã **C** thu được **M’**. 
+- Bob sẽ được thuyết phục rằng **M** thực sự đến từ Alice và **M** không bị thay đổi trong quá trình truyền nếu và chỉ nếu **M’=M**.
+- Tuy nhiên, phương pháp này cho phép Alice có thể từ chối Charlie rằng **M** xuất phát từ Alice vì **M** có khả năng xuất phát từ Bob do cùng chia sẻ khoá bí mật **K**. 
+ → Nhược điểm này được giải quyết bằng mật mã hoá khoá công khai.
+- Nếu chuỗi **M** ngắn, có thể mã hóa **M** trực tiếp để xác nhận nó. 
+- Nếu chuỗi **M** dài, chỉ cần tính toán một h ngắn đại diện cho **M** và mã hóa **h**.
+
+**Vậy h được tạo ra như thế nào?**
+
+- **h** được tạo ra mà không sử dụng khoá bí mật được gọi là digital digest hoặc digital fingerprint (dấu vân tay kỹ thuật số), có thể thu được từ một hàm băm (Hash Function).
+- **h** được tạo ra bằng cách sử dụng một khoá bí mật được gọi là một mã xác thực thông điệp (MAC – Message Authentication Code).
+- **h** cũng có thể thu được bằng cách sử dụng giải thuật checksum kết hợp một hàm băm để tạo ra một mã xác thực tin nhắn keyed-hash (HMAC - Keyed-Hash Message Authentication Code)
+
+#### 5. Điều khiển lỗi khi gởi thông điệp: 
+![Text thay thế](https://raw.githubusercontent.com/howtodie123/howtodie123/readme.io/image/1.PNG)
+- **a) Kiểm soát lỗi nội bộ**
+- **b) Kiểm soát lỗi bên ngoài**
+- **Giải thích kí hiệu:**
+  + M : Message, là thông điệp
+  + E : Encrypt, là hàm mã hóa
+  + D : Decrypt, là hàm giải mã
+  + K : Khóa 
+  + F(M) : là hàm băm của dữ liệu M đầu vào 
+  + II: Phép nối, dùng để nối 2 chuỗi kí tự, chuỗi bên dưới dùng để kiểm tra sau khi bên kia giải mã M
+
+#### 6. Các công dụng cơ bản của mã hóa:
+![Text thay thế](https://raw.githubusercontent.com/howtodie123/howtodie123/readme.io/image/Picture2.png)
+- **Giải thích kí hiệu**
+   + PU : public key , khóa công khai
+   + PR : Private key, khóa bí mật
+   + A : bên gửi
+   + B : bên nhận
+   + Các kí hiệu còn lại(xem lại ở trên)
+- **a) Mã hoá khoá đối xứng (khoá bí mật):**
+   + Bảo mật: chỉ A và B chia sẻ K
+   + Chứng Thực:
+      + Có thể đến chỉ từ A
+      + Không thay đổi trong quá trình truyền
+      + Yêu cầu một số định dạng và dự phòng
+   + Không cung cấp chữ ký:
+      + Người nhận có thể giả mạo thông điệp
+      + Người gửi có thể phủ nhận thông điệp
+- **b) Mã hoá khoá bất đối xứng (khoá công khai)**
+   + A → B: E(PU<sub>b</sub>, M)
+   + Bảo mật:
+      + Chỉ B có PR<sub>b</sub> giải mã
+   + Không cung cấp chứng thực
+      + Bất cứ ai cũng có thể sử dụng PU<sub>b</sub> để mã hoá thông điệp và tự xưng là A.
+- **c) Mã hóa khóa công khai: chứng thực và chữ ký số:**
+   + A → B: E(PR<sub>a</sub>, M)
+   + Cung cấp chứng thực và chữ ký số
+      + Chỉ A có PRb để mã hoá
+      + Không bị thay đổi trong quá trình truyền
+      + Yêu cầu một số định dạng và dự phòng
+      + Bất kỳ ai cũng có thể sử dụng PUa để xác minh chữ ký số
+- **d. Mã hoá khoá công khai: bảo mật, chứng thực, và chữ ký số**
+   +  A → B: E(PUb, E(PRa, M))
+   +  Cung cấp bảo mật nhờ PUb.
+   +  Cung cấp chứng thực và chữ ký số nhờ PRa.
+
+### B. Mã chứng thực thông điệp
+
+#### 1. Khái niệm:
+- Là một **kỹ thuật chứng thực** liên quan đến việc sử dụng một khoá bí mật để tạo ra một khối dữ liệu có kích thước nhỏ cố định (checksum hoặc MAC) và được thêm vào thông điệp.
+- Kỹ thuật này giả sử rằng 2 phía tham gia truyền thông là A và B chia sẻ một khoá bí mật K. Khi A có một thông điệp gởi đến B, A sẽ tính toán MAC như là một hàm của thông điệp và khoá: MAC=C(K, M), với:
+   +  M: thông điệp đầu vào có kích thước biến đổi
+   +  C: hàm MAC
+   +  K: khoá bí mật chia sẻ giữa người gởi và người nhận
+   +  MAC: mã chứng thực thông điệp có chiều dài cố định Chiều dài thông thường của MAC: 32..96 bit
+- Để tấn công cần thực hiện 2n lần thử với n là chiều dài của MAC (bit).Chiều dài thông thường của khoá K: 56..160 bit
+- Để tấn công cần thực hiện 2k lần thử với k là chiều dài của khoá K (bit).
+- **Ứng dụng trong:**
+   + Banking: sử dụng MAC kết hợp triple-DES
+   + Internet: sử dụng HMAC và MAC kết hợp AES
+
+![Text thay thế](https://raw.githubusercontent.com/howtodie123/howtodie123/readme.io/image/Picture3.png)
+- **a. Chứng thực**
+   + A → B: M II C(K, M)
+   + Chứng thực: chỉ A và B chia sẻ K
+- **b. Chứng thực và bảo mật: chứng thực gắn liền với plaintext** 
+   + A → B: E(K2, [M II C(K, M)])
+   + Chứng thực: chỉ A và B chia sẻ K1
+   + Bảo mật: chỉ A và B chia sẻ K2
+- **c. Chứng thực và bảo mật: chứng thực gắn liền với ciphertext** 
+   + A → B: E(K2, M) II C(K1, E(K2, M))
+   + Chứng thực: sử dụng K1
+   + Bảo mật: sử dụng K2
+
+#### 2. Khả năng bị bruteforce:
+
+- Sử dụng khóa bí mật (hoặc khóa công khai) -> mất 2^(k-1) lần thử cho một khóa k bit. Nếu biết cyphertext C (P<sub>i</sub>=D(K<sub>i</sub>,C)) -> cần thử với tất cả K<sub>i</sub> đến khi nào P<sub>i</sub> có plaintext chấp nhận được.
+- Sử dụng MAC -> Giả sử k>n (kích thước khoá lớn hơn kích thước MAC) và MAC1 = C(K, M1), việc thám mã phải thực hiện MAC<sub>i</sub> = C(K<sub>i</sub>, M<sub>1</sub>) với tất cả các giá trị có thể của K<sub>i</sub>. Ít nhất có một khoá đảm bảo MAC<sub>i</sub> = MAC<sub>1</sub>
+- Lưu ý rằng sẽ có 2k MACs được tạo ra nhưng chỉ có 2n < 2k giá trị MAC khác nhau. Do đó, một số khoá sẽ tạo ra các MAC chính xác và attacker không có cách nào để biết được đó là khoá nào. Trung bình, có 2k/2n = 2(k-n) khoá được tạo ra và attacker phải lặp đi lặp lại các cuộc tấn công.
+
+#### 3. Ví dụ bài tập: 
+
+- **Cho một khóa 80 bit được sử dụng và MAC dài 32 bit**
+   + Vòng 1: 2^(k – n) = 2^(80 - 32) = 2^48 khả năng khóa
+   + Vòng 2: 2^(k – 2n) = 2^(80 – 64) = 1 ^16 khả năng khóa
+   + Vòng 3: 2^(k – 3n) = 2^(80-96) < 1 ->  sẽ tạo ra 1 khóa duy nhất , chính là khóa của người gửi.
+![Text thay thế](https://raw.githubusercontent.com/howtodie123/howtodie123/readme.io/image/Picture4.png)
+
+### C. Hàm băm
+
+- Một hàm băm nhận một chuỗi dài ở đầu vào, ngắt nó thành nhiều mảnh, trộn lẫn chúng và tạo ra một chuỗi mới với chiều dài ngắn.
+- Lưu ý: Không phải mọi hàm băm đều thích hợp cho việc tạo ra một dấu vân tay kỹ thuật số.
+- **Ví dụ:**
+   + Xét một hàm băm đơn giản H(+) sử dụng toán tử XOR để biến đổi một chuỗi đầu vào có độ dài tuỳ ý để thu được một chuỗi 16 bit ở đầu ra.
+   + Cho M = M1M2…Mk, với mỗi Mi(có thể ngoại trừ khối Mk) là một chuỗi nhị phân 16 bit. Nếu Mk ngắn hơn 16 bit, thêm vào cuối một số bit 1 để được khối 16 bit
+   + Cho hàm băm sau:
+
+![Text thay thế](https://raw.githubusercontent.com/howtodie123/howtodie123/readme.io/image/Picture5.png)
+
+> Đây là hàm băm không thích hợp cho việc tạo dấu vân tay kỹ thuật số vì nếu sử dụng mã **ASCII 8** ta thu được 2 chuỗi băm giống nhau tương ứng với 2 đoạn sau:
+- S1: ‘He likes you but I hate you”
+- S2: ‘He hates you but I like you”
+{: .prompt-tip }
+
+#### 1. Lịch sử hàm băm
+
+- Năm 2004, nhà toán học Trung QUốc Xiaoyun Wang chứng minh hàm băm MD4,MD5,HACAL-128,RIPEMD không đáp ứng tiêu chí kháng đụng độ.
+- Năm 2005, chứng minh SHA-1 không kháng đụng độ
+- MD5, Whirlpool, SHA-1,SHA-2 được đề xuất bởi Ralph C.Merkle 1978
+
+#### 2. Cấu trúc cơ bản Hàm băm
+
+![Text thay thế](https://raw.githubusercontent.com/howtodie123/howtodie123/readme.io/image/Picture6.png)
+
+#### 3. Các công dụng của hàm băm
+
+![Text thay thế](https://raw.githubusercontent.com/howtodie123/howtodie123/readme.io/image/Picture7.png)
+![Text thay thế](https://raw.githubusercontent.com/howtodie123/howtodie123/readme.io/image/Picture8.png)
+
+- **Sơ đồ (a) - Mã hoá thông điệp cộng với mã băm**
+   + A → B: E(K, [M II H(M)])
+   + Bảo mật: chỉ A và B chia sẻ K
+   + Chứng thực: H(M) được bảo vệ bằng mật mã
+- **Sơ đồ (b) - Mã hoá mã băm chia sẻ với khoá bí mật**
+   + A → B: M II E(K, H(M))
+   + Chứng thực: H(M) được bảo vệ bằng mật mã
+- **Sơ đồ (c) - Mã hoá khoá bí mật với mã băm của người gởi**
+   + A → B: M II E(PRA, H(M))
+   + Chứng thực và chữ ký số:
+      + H(M) được bảo vệ bằng mật mã
+      + Chỉ A có thể tạo E(PRA, H(M))
+- **Sơ đồ (d) - Mã hoá kết quả của (c) với khoá bí mật chia sẻ**
+   + A → B: E(K, [M II E(PRA, H(M))])
+   + Bảo mật: chỉ A và B chia sẻ K
+   + Chứng thực và chữ ký số
+
+- **Sơ đồ (e) - Tính mã băm của thông điệp cộng với trị bí mật** 
+   + A → B: M II H(M II S)
+   + Chứng thực: chỉ A và B chia sẻ S
+
+- **Sơ đồ (f) - Mã hoá kết quả của (e)**
+   + A → B: E(K, [M II H(M II S)])
+   + Chứng thực: chỉ A và B chia sẻ S
+   + Bảo mật: chỉ A và B chia sẻ K
+ 
+#### 4. Giới thiệu về các hàm băm
+
+- **MD5:** (Message-Digest algorithm 5) là một hàm băm mật mã với giá trị băm dài 128 bit diễn tả bởi một số thập lục phân 32 ký tự (RFC 1321).Được dùng chủ yếu để kiểm tra tính toàn vẹn của tập tin trên nguyên tắc hai dữ liệu vào X và Y hoàn toàn khác nhau thì xác suất để có cùng một md5 hash giống nhau là rất nhỏ.
+- **SHA** (Secure Hash Algorithm – Giải thuật băm an toàn) được phát triển bởi cục An ninh quốc gia Mỹ (National Security Agency – NSA).Giải thuật an toàn:Cho một giá trị băm nhất định được tạo nên bởi một trong những giải thuật SHA, việc tìm lại được đoạn dữ liệu gốc là không khả thi.
+- **SHA có 2 phiên bản:**
+   + **SHA-1:**  : trả lại kết quả dài 160 bit. Được sử dụng rộng rãi để thay thế MD5 trong nhiều ứng dụng và giao thức bảo mật khác nhau, bao gồm TLS, SSL, PGP, SSH, S/MIME, IPSec
+   + **SHA-2:** có 4 giải thuật: 224, 256,384,512 (y = 512 và R= 2^128 -1)
+
+### D. Chữ ký số
+
+#### 1. Sử dụng khoá công khai để tạo chữ ký số:
+
+- Giả sử A cần gởi cho B một thông điệp mật kèm chữ ký điện tử, A sẽ sử dụng khoá công khai của B để mã hoá thông điệp rồi dùng khoá cá nhân của mình để mã hoá chữ ký, sau đó gởi cả thông điệp lẫn chữ ký cho B. B sẽ dùng khoá công khai của A để giải mã chữ ký, rồi dùng khoá cá nhân của mình để giải mã thông điệp của A.
+- Việc tạo chữ ký và kiểm chứng chữ ký thường được thực hiện nhờ hàm băm.
+
+#### 2. Ký vào thông điệp:
+
+- Dùng giải thuật băm để thay đổi thông điệp cần truyền đi để được một **message digest** (MD5 thu được digest có chiều dài 128-bit hoặc SHA thu được digest 160-bit).
+- Sử dụng khóa private key của người gửi để mã hóa **message digest** thu được ở bước trên. Bước này thường dùng giải thuật RSA. Kết quả thu được gọi là **digital signature** của thông điệp ban đầu. Gộp **digital signature** vào thông điệp ban đầu (“ký nhận” vào thông điệp). Sau đó, mọi sự thay đổi trên message sẽ bị phát hiện. Việc ký nhận này đảm bảo người nhận tin tưởng thông điệp này xuất phát từ người gửi chứ không phải là ai khác.
+- **Các bước kiểm tra:**
+   + Dùng **public key** của người gửi (khóa này được thông báo đến mọi người) để giải mã chữ ký số của thông điệp
+   + Dùng **giải thuật (MD5 hoặc SHA) băm** thông điệp nhận được. So sánh kết quả thu được ở bước 1 và 2. Nếu trùng nhau, ta kết luận thông điệp này không bị thay đổi trong quá trình truyền và thông điệp này là của người gửi.
+
+**Lưu ý:**
+
+- Có mã hóa sẽ có Dòng Encrypt và Decrypt
+- Không mã hóa ta sẽ không thấy có dòng Encrypt và Decrypt
+
+![Text thay thế](https://raw.githubusercontent.com/howtodie123/howtodie123/readme.io/image/Picture9.png)
+
+![Text thay thế](https://raw.githubusercontent.com/howtodie123/howtodie123/readme.io/image/Picture10.png)
 
 ## VI. Giao thức bảo mật mạng
 
