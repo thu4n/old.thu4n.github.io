@@ -10,7 +10,7 @@ image: /assets/img/other/tet-cuu.png
 tags: [computer network, network security, sysadmin]
 ---
 
-Xin chào các bạn, trong bài viết lần này mình sẽ cố gắng tóm tắt về môn học NT101 - An toàn mạng máy tính theo chương trình giảng dạy cho lớp Mạng tại UIT. Nội dung khá là dài nhưng thầy đã rộng lượng cho tận **2 tờ A4** thì có vẻ sẽ đủ, thời gian làm bài nếu mình nhớ không lầm thì đâu đó khoảng **75 phút**. Nôm na là thế, chúng ta sẽ có **8 chương** tổng cộng cần phải ôn tập nên mình vô thẳng nội dung chính luôn thôi.
+Xin chào các bạn, trong bài viết lần này mình và 2 người bạn nữa của mình sẽ cố gắng tóm tắt về môn học NT101 - An toàn mạng máy tính theo chương trình giảng dạy cho lớp Mạng tại UIT. Nội dung khá là dài nhưng thầy đã rộng lượng cho tận **2 tờ A4** thì có vẻ sẽ đủ, thời gian làm bài nếu mình nhớ không lầm thì đâu đó khoảng **75 phút**. Nôm na là thế, chúng ta sẽ có **8 chương** tổng cộng cần phải ôn tập nên ta vô thẳng nội dung chính luôn thôi.
 
 Note: Cần bổ sung các hình ảnh minh họa.
 ## I. Tổng quan
@@ -27,15 +27,19 @@ Khi trao đổi dữ liệu, có 4 yêu cầu như sau:
 1. **Tính bí mật** (Confidentiality) - Khả năng chỉ cho phép những người có quyền truy cập vào thông tin đó
 2. **Tính toàn vẹn** (Integrity) - Khả năng đảm bảo rằng thông tin không bị thay đổi hoặc sửa đổi mà không được phép. 
 3. **Tính không thể từ chối** (Non-repudiation) - Khả năng xác định người gửi hoặc người nhận một thông điệp.
-4. **Tính sẵn sàng (Availability)** - Khả năng đảm bảo rằng thông tin hoặc hệ thống có sẵn khi cần thiết.
+4. **Tính sẵn sàng** (Availability) - Khả năng đảm bảo rằng thông tin hoặc hệ thống có sẵn khi cần thiết.
 
 #### Một số khái niệm khác
+
+![](https://cdn.getmidnight.com/d0f1c52a0107bd8707444bbf130a0234/2022/08/functionality-usability-security.webp)
 
 - Tam giác bảo mật bao gồm 3 thành phần là **Security** (Restrictions), **Functionality**(Features) và **Usability**(GUI). Khi ta thiên về một thành phần nào thì 2 thành phần còn lại trong tam giác sẽ bị yếu đi. VD: Tăng tính bảo mật thì sẽ hạn chế hơn về tính năng và giao diện ít thân thiện người dùng hơn, ngược lại, nếu thêm nhiều tính năng mới thì dễ có lỗ hỏng bảo mật và người dùng sẽ gặp khó khăn hơn khi mới sử dụng lần đầu.
 
 ### B. Các kỹ thuật tấn công phổ biến và cơ chế phòng thủ
 
 #### 1. Eavesdropping (Nghe trộm)
+
+![Alt text](https://images.shiksha.com/mediadata/ugcDocuments/images/wordpressImages/2022_08_MicrosoftTeams-image-34_480x360.jpg)
 
 - Cách thức tấn công: Sử dụng một thiết bị mạng (router, card mạng…) và một ứng dụng (Tcpdump, Ethereal, Wireshark…) để giám sát lưu lượng mạng, bắt các gói tin đi qua thiết bị này. Từ đó, "nghe trộm" được thông tin từ các phiên trao đổi dữ liệu.
 - Nhận xét: Thực hiện dễ dàng hơn với mạng không dây. **Không** có cách nào ngăn chận việc nghe trộm trong một mạng công cộng.
@@ -70,12 +74,16 @@ Password Pilfering là một hình thức tấn công nhằm đánh cắp mật 
 
 **3.2. Social engineering**
 
+![](https://media.licdn.com/dms/image/D4D12AQGUV1A0JIRi2w/article-cover_image-shrink_720_1280/0/1679281558811?e=2147483647&v=beta&t=YDrGAWsTIHsyApi0oX-XmjCq0u6uVIOJuVBfADpqoRw)
+
 - Là phương pháp sử dụng các kỹ năng xã hội để ăn cắp thông tin mật của người khác thông qua các thủ thuật như Mạo danh, Lừa đảo qua email, Thu thập thông tin từ giấy tờ bị loại bỏ, Tạo trang web đăng nhập giả hoặc chỉ đơn giản là Kết bạn làm quen rồi lấy cắp thông tin cá nhân của mục tiêu.
 - Ý kiến cá nhân: Đây có thể được xem là phương pháp nguy hiểm nhất khi nó tấn công vào yếu tố con người nhiều hơn là hệ thống.
 
 **3.3. Dictionary Attacks**
 
-- Tên tiếng Việt là tấn công từ điển, thực hiện bằng cách duyệt tìm từ một từ điển (thu được từ các file SAM của Window, /etc/passwd trong Linux) các username và password đã được mã hoá.
+![](https://miro.medium.com/v2/resize:fit:948/0*zCEEJ4OJn4ZI9VRo)
+
+- Tên tiếng Việt là tấn công từ điển, thực hiện bằng cách duyệt tìm từ một từ điển các username và password đã được mã hoá (thu được từ các file SAM của Window hoặc từ trong thư mục `/etc/passwd` trong Linux).
 
 **3.4. Password Sniffing**
 
@@ -103,10 +111,12 @@ Password Pilfering là một hình thức tấn công nhằm đánh cắp mật 
 
 **4.1. Man-in-the-middle**
 
-– Kẻ tấn công cố gắng dàn xếp với thiết bị mạng (hoặc cài đặt một thiết bị của riêng mình) giữa hai hoặc nhiều người sử dụng, sau đó chặn và sửa đổi hay làm giả dữ liệu truyền giữa những người sử dụng rồi tiếp tục truyền chúng tới địa chỉ đích như chưa từng bị tác động bởi kẻ tấn công.
+- Kẻ tấn công cố gắng dàn xếp với thiết bị mạng (hoặc cài đặt một thiết bị của riêng mình) giữa hai hoặc nhiều người sử dụng, sau đó chặn và sửa đổi hay làm giả dữ liệu truyền giữa những người sử dụng rồi tiếp tục truyền chúng tới địa chỉ đích như chưa từng bị tác động bởi kẻ tấn công.
 - Mã hoá và chứng thực các gói IP là biện pháp chính để ngăn chận các cuộc tấn công Man-in-the-midle.
 
 **4.2. Messeage Replays**
+
+![](https://media.geeksforgeeks.org/wp-content/uploads/20220720163836/sessionreplay1.png)
 
 - Trong một số giao thức xác thực, sau khi người dùng A chứng thực mình với hệ thống là một người dùng hợp pháp, A sẽ được cấp một chứng thực (giấy phép) thông qua. Với giấy phép này, A sẽ nhận được những dịch vụ cung cấp bởi hệ thống.
 - Những kẻ tấn công có thể ngăn chặn gói tin chứa chứng thực đó, giữ một bản sao, và sử dụng nó sau này để mạo nhận (đóng vai) người dùng A.
@@ -118,17 +128,20 @@ Password Pilfering là một hình thức tấn công nhằm đánh cắp mật 
 
 #### 5. Buffer-Overflow Exploitations
 
+![](https://www.imperva.com/learn/wp-content/uploads/sites/13/2018/01/buffer-overflow.png)
+
 - Buffer-Overflow là lỗi xảy ra khi quá trình ghi dữ liệu vào bộ đệm nhiều hơn kích thước khả dụng của nó.
 - Các hàm `strcat()`, `strcpy()`, `sprintf()`, `vsprintf()`, `bcopy()`, `get()`, `scanf()`… trong ngôn ngữ C có thể bị khai thác bằng lỗi này vì không kiểm tra xem liệu bộ đệm có đủ lớn để dữ liệu được sao chép vào mà không gây ra tràn bộ đệm hay không.
 
 #### 6. Repudiation
 
+![](https://catscanman.net/wp-content/uploads/2023/02/meme-ai-biet-dau.jpg)
+_**Tôi sử dụng Repudiation Attack sau khi leak hết thông tin nội bộ của công ty**_
+
+
 - Trong một số trường hợp chủ sở hữu của dữ liệu có thể không thừa nhận quyền sở hữu của dữ liệu để tránh hậu quả pháp lý. Người này có thể cho rằng chưa bao giờ gửi hoặc nhận các dữ liệu đó. Ngay cả khi dữ liệu đã được chứng thực, chủ sở hữu của dữ liệu xác thực có thể thuyết phục quan tòa rằng vì những sơ hở, bất cứ ai cũng có thể dễ dàng chế tạo tin nhắn và làm cho nó trông giống như thật.
 
-> "Cháu nó ở nhà vô phá máy tính em, lỡ leak hết thông tin công ty cho bên đối thủ chứ em có biết gì đâu"
-
-- Sử dụng các thuật toán mã hóa và xác thực có thể 
-giúp ngăn ngừa các cuộc tấn công bác bỏ.
+- Sử dụng các thuật toán mã hóa và xác thực có thể giúp ngăn ngừa các cuộc tấn công bác bỏ.
 
 #### 7. Intrusion
 
@@ -187,6 +200,8 @@ Một mô hình bảo mật cơ bản gồm 4 thành phần:
 ## II. Malware
 
 ### A. Trojan
+
+![](https://i.kym-cdn.com/entries/icons/original/000/026/726/trojan.jpg)
 
 #### 1. Khái niệm
 
