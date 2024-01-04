@@ -188,11 +188,233 @@ Một mô hình bảo mật cơ bản gồm 4 thành phần:
 
 ### A. Trojan
 
+#### 1. Khái niệm
+
+Cái tên Trojan được lấy ý tưởng từ Ngựa Trojan trong truyền thuyết Hy Lạp cổ đại thế kỷ 17 (cái này thi không hỏi đâu, một fun fact thôi). Phần mềm Trojan đầu tiên trên máy tính là **Back Orifice** với port xâm nhập là 31337.
+
+Trojan là chương trình gây hại, thường hoạt động bí mật và có công dụng phổ biến là **thiết lập quyền điều khiển từ xa** cho hacker trên máy bị nhiễm Trojan. Các đặc điểm khác của Trojan có thể xem thêm lại ở mục [I.B.9. Malicious Software](#9-malicious-software)
+
+Trojan có thể xâm nhập vào hệ thống qua rất nhiều con đường nhau như qua ứng dụng nhắn tin, file đính kèm trong email, phần mềm miễn phí trên mạng...
+
+#### 2. Phân loại Trojan
+
+Ta có các loại Trojan thường thấy như sau:
+- **RAT** - Remote Access Trojan: Biến máy tính bị nhiễm thành server để máy của hacker có thể truy cập vào và nắm quyền điều khiển. RAT tự động kích hoạt mỗi khi máy tính hoạt động và thường vô hiệu hóa việc chỉnh sửa registry nên khóa xóa Trojan này. Phổ biến có Back Orifice, Girlfriend, Netbus…
+- **Keyloggers**: Bao gồm 2 loại phần cứng và phần mềm, kích thước nhỏ gọn và sử dụng ít bộ nhớ nên khó phát hiện. Chúng có nhiệm vụ chủ yếu là ghi lại diễn biến của bàn phím rồi lưu lại trên máy hoặc gửi về cho hacker. Một keylogger thường gồm **3 thành phần** chính là **Chương trình điều khiển** để điều phối hoạt động và thiết lập, **Tập tin hook** để ghi nhận các thao tác bàn phím và **Tập tin nhật ký (log)** - Nơi chứa đựng toàn bộ những gì hook ghi nhận được.
+- **Trojan lấy cắp password**: Đúng như tên gọi, chúng ăn cắp các mật khẩu lưu trên hệ thống rồi gửi về cho hacker. Các loại phổ biến là Barri, Kuang, Barok.
+- **FTP Trojan**: Loại này mở cổng **21** trên máy bị nhiễm nên mọi người đều có thể truy cập máy này để tải dữ liệu.
+- **Trojan phá hoại**: Có khả năng phá hủy đĩa cứng, mã hoá các file. Rất nguy hiểm và khó kiểm soát.
+- **Trojan chiếm quyền kiểu leo thang**: Thường được gắn vào một ứng dụng hệ thống nào đó và sẽ cho hacker quyền cao hơn quyền đã có trong hệ thống khi ứng dụng này chạy.
+
+#### 3. Một số Trojan phổ biến
+
+- Loại Keyloggers
+    - KGB Spy.
+    - Blazing Tool Perfect Keylogger
+    - Stealth Keylogger
+- Loại RAT
+    - DJI RAT
+    - HackerzRAT
+    - NET BUS
+- Công cụ tạo Trojan
+    - Trojan Horse Construction Kit
+    - Dark Horse Trojan Virus Maker
+
 ### B. Phòng chống Trojan
 
-### C. Virus và các kỹ thuật của Virus
+Dưới đây là một số bước cần thực hiện nhằm phòng chống Trojan:
+- Quét các port đang mở với các công cụ như Netstat, Fport, TCPView.
+- Quét các tiến trình đang chạy với Process Viewer, What’s on my computer, Insider.
+- Quét những thay đổi trong Registry với MsConfig, What’s running on my computer.
+- Quét những hoạt động mạng với Ethereal, WireShark.
+- Chạy các phần mềm diệt Trojan như Trojan Hunter, Trojan Guard.
 
-### D. Phòng chống Virus
+Một số cổng đi cùng các Trojan thông dụng:
+
+|<center>Trojan</center> | <center>Protocol</center>| <center>Port</center>|
+|:-------|:--------|:--------|
+| Back Orifice  |UDP| 31337 hoặc 31338|
+| Deep Throat |  UDP | 2140 và 3150|
+|NetBus|TCP|12345 và 12346|
+|Whack-a-mole|TCP|20034|
+|NetBus 2 Pro|TCP |21544|
+|GirlFriend|TCP|21544|
+|Masters Paradise|TCP|3129, 40421, 40422, 40423 và 40426|
+
+> Trong slide của thầy mình, có thêm khoảng 3 bảng nữa chứa rất nhiều loại Trojan kèm số port, còn ở đây mình chỉ mới nêu tiêu biểu một phần thôi. Anh em nào muốn xem chi tiết có thể xem tại [link này, slide số 58.](https://uithcm-my.sharepoint.com/:b:/g/personal/21522652_ms_uit_edu_vn/EYc8QDF6C1hPhcIccrnen4UBvwMJf_4kHizX9Ej5kWcKkg?e=QyXEu0)
+{: .prompt-info }
+
+
+### C. Virus
+
+Những thông tin cơ bản về virus, bạn có thể xem lại tại mục [I.B.9. Malicious Software](#9-malicious-software)
+
+#### 1. Lịch sử của Virus
+
+- Năm 1949: John von Neumann (1903-1957) phát triển nền tảng lý thuyết tự nhân bản của một chương trình cho máy tính.
+- Năm 1981: Các virus đầu tiên xuất hiện trong hệ điều hành của máy tính Apple II.
+- Năm 1983: Tại Đại Học miền Nam California, Fred Cohen lần đầu đưa ra khái niệm computer virus.
+- Năm 1986: Virus "the Brain", virus cho máy tính cá nhân (PC) đầu tiên, được tạo ra tại Pakistan bởi Basit và Amjad.
+- Năm 1987: Virus đầu tiên tấn công vào command.com là virus "Lehigh". 
+- Năm 1988: Virus Jerusalem tấn công đồng loạt các đại học và các công ty trong các quốc gia vào ngày thứ Sáu 13.
+- Tháng 11.1988, Robert Morris, 22 tuổi, chế ra worm chiếm cứ các máy tính của ARPANET, làm tê liệt khoảng 6.000 máy.
+- Năm 1990: Norton giới thiệu chương trình thương mại chống virus đầu tiên.
+- Năm 1991: Virus đa hình (polymorphic virus) ra đời đầu tiên là virus "Tequilla".
+- Năm 1995: Virus văn bản (macro virus) đầu tiên xuất hiện.
+- Năm 1998: Virus Melissa, tấn công hơn 1 triệu máy, lan truyền bởi một tệp đính kèm kiểu Word.
+- Năm 2003: Virus Slammer, một loại worm lan truyền với vận tốc kỉ lục, truyền cho khoảng 75 ngàn máy trong 10 phút.
+- Năm 2004: Xuất hiện worm Sasser. Với virus này thì người ta không cần phải mở đính kèm của điện thư mà chỉ cần mở lá thư là đủ cho nó xâm nhập vào máy.
+
+#### 2. Tính chất của Virus
+
+1. Tính lây lan.
+2. Tính phá hoại.
+3. Tính nhỏ gọn.
+4. Tính tương thích.
+5. Tính phát triển và kế thừa.
+
+#### 3. Phân loại virus
+
+**3.1. Phân loại theo phương pháp tìm đối tượng lây nhiễm**
+
+1. Virus thường trú
+2. Virus không thường trú
+
+**3.2. Phân loại theo đối tượng nhiễm và môi trường hoạt động**
+
+1. Boot Virus
+2. File-System Virus
+3. File-Format Virus
+4. Macro Virus
+5. Script Virus
+6. Registry Virus
+
+**3.3. Phân loại theo phương pháp lây nhiễm**
+
+1. Ghi đè
+2. Ghi đè bảo toàn
+3. Dịch chuyển
+4. Song hành
+5. Nối thêm
+6. Chèn giữa
+7. Định hướng lại lệnh nhảy
+8. Điền khoảng trống
+
+**3.4. Cách phân loại khác theo tính năng và bản chất**
+
+1. System Sector or Boot Virus: lây nhiễm trên cung boot của đĩa. 
+2. File Virus: lây nhiễm trên các file thực thi.
+3. Macro Virus: lây nhiễm trên các tập tin word, excel, access…
+4. Source Code Virus: ghi đoạn code của Trojan đè hoặc nối tiếp vào đoạn code của tập tin chủ.
+5. Network Virus: tự phát tán theo email bằng cách sử dụng lệnh và các giao thức của mạng máy tính.
+6. Stealth Virus: có thể ẩn với các chương trình chống virus.
+7. Polymorphic Virus: có thể thay đổi đặc điểm của nó với mỗi lần lây nhiễm.
+8. Cavity Virus: duy trì kích thước file không thay đổi trong khi lây nhiễm.
+9. Tunneling Virus: tự che giấu dưới những dạng anti-virus khi lây nhiễm.
+10. Camouflage Virus: ngụy trang dưới dạng những ứng dụng chính hãng của người dùng.
+11. Shell Virus: đoạn mã của virus sẽ tạo thành một shell xung quanh đoạn mã của chương trình bị lây nhiễm, tương tự như một chương trình con trên chương trình gốc nguyên thủy.
+12. Add-on Virus: ghi đoạn mã của nó nối tiếp vào 
+điểm bắt đầu của chương trình bị lây nhiễm và không tạo ra thêm bất kỳ thay đổi nào khác.
+13. Intrusive Virus: viết đè đoạn code của nó lên một phần hoặc hoàn toàn đoạn code của file bị lây nhiễm.
+
+#### 4. Một số công cụ tạo virus
+
+- Terabit Virus Maker
+- DELmE's Batch Virus Maker
+- Sam's Virus Generator
+- JPS Virus Maker
+- Sonic Bat
+- Poison Virus Maker
+
+### D. Các kỹ thuật của Virus
+
+#### 1. Kỹ thuật cơ bản
+Các kỹ thuật cơ bản của Virus bao gồm 9 kỹ thuật như sau:
+
+1. [Kỹ thuật lây nhiễm](#11-kỹ-thuật-lây-nhiễm)
+2. [Kỹ thuật định vị trên vùng nhớ](#12-kỹ-thuật-định-vị-trên-vùng-nhớ)
+3. [Kỹ thuật kiểm tra sự tồn tại](#13-kỹ-thuật-kiểm-tra-sự-tồn-tại)
+4. [Kỹ thuật thường trú](#14-kỹ-thuật-thường-trú)
+5. [Kỹ thuật mã hoá](#15-kỹ-thuật-mã-hoá)
+6. [Kỹ thuật nguỵ trang](#16-kỹ-thuật-nguỵ-trang)
+7. [Kỹ thuật phá hoại](#17-kỹ-thuật-phá-hoại)
+8. [Kỹ thuật chống bẫy](#18-kỹ-thuật-chống-bẫy)
+9. [Kỹ thuật tối ưu](#19-kỹ-thuật-tối-ưu)
+
+##### 1.1. Kỹ thuật lây nhiễm
+
+Là kỹ thuật cơ bản cần phải có của mỗi virus. Có thể đơn giản hoặc phức tạp tuỳ loại virus.
+
+- Kỹ thuật lây nhiễm Boot Record / Master Boot của đĩa: thay thế BR hoặc MB trên phân vùng hoạt động với chương trình virus.
+- Kỹ thuật lây nhiễm file thực thi: chương trình virus sẽ được ghép vào file chủ bằng cách nối thêm, chèn giữa, điền vào khoảng trống, ghi đè
+
+Thuật toán thường dùng để lây nhiễm một file `.COM`:
+
+- Mở file
+- Ghi lại thời gian/ngày tháng/thuộc tính
+- Lưu trữ các byte đầu tiên (thường là 3 byte)
+- Tính toán lệnh nhảy mới
+- Đặt lệnh nhảy
+- Chèn thân virus chính vào
+- Khôi phục thời gian/ngày tháng/thuộc tính
+- Đóng file
+
+
+##### 1.2. Kỹ thuật định vị trên vùng nhớ
+
+Phân phối một vùng nhớ để thường trú, chuyển toàn bộ chương trình virus tới vùng nhớ này, sau đó chuyển quyền điều khiển cho đoạn mã tại vùng nhớ mới với địa chỉ `segment:offset` mới.
+
+Virus macro và virus script thực chất là các lệnh của chương trình ứng dụng nên không cần tiến hành kỹ thuật này. Với  virus boot và virus file thì đây là một kỹ thuật quan trọng, cần phải có.
+
+##### 1.3. Kỹ thuật kiểm tra sự tồn tại
+
+Mỗi virus chỉ nên lây nhiễm/kiểm soát một lần để đảm bảo không làm ảnh hưởng đến tốc độ làm việc của máy tính => Cần có kỹ thuật kiểm tra sự tồn tại của mình trước khi lây nhiễm hoặc thường trú.
+
+Kỹ thuật kiểm tra thường là:
+
+- Dò tìm đoạn mã nhận diện trên file hoặc bộ 
+nhớ.
+- Kiểm tra theo kích thước hoặc nhãn thời 
+gian của file
+
+##### 1.4. Kỹ thuật thường trú
+
+Cũng có thể gọi đây là kỹ thuật phân phối vùng nhớ, được thực hiện trước khi triển khai định vị tới vùng nhớ đã xác định đó.
+
+- Các virus boot phải phân phối một vùng nhớ riêng để lưu giữ chương trình virus bao gồm mã lệnh, biến, vùng đệm.
+- Các virus file cần phải kiểm tra xem chương trình đã thường trú chưa, nếu chưa sẽ định rõ vùng nhớ muốn sử dụng, copy phần virus vào bộ nhớ, sau đó khôi phục file chủ và trả quyền điều khiển về cho file chủ.
+
+
+##### 1.5. Kỹ thuật mã hoá
+
+Che giấu mã lệnh thực sự của chương trình virus. Thủ tục mã hoá cũng chính là thủ tục giải mã.
+
+##### 1.6. Kỹ thuật nguỵ trang
+
+Giấu giếm, nguỵ trang sự tồn tại của virus trên đối tượng chủ. Những virus sử dụng kỹ thuật này thường chậm bị phát hiện nên có khả năng lây lan mạnh.
+
+Quy trình nén file để ngụy trang sự tồn tại của virus:
+- Kiểm tra kích thước file chủ định lây nhiễm
+- Nén file chủ
+- Gắn đoạn mã cần lây nhiễm vào file chủ
+- Có thể chèn thêm những đoạn ký tự vô nghĩa khi kích thước file chủ + virus vẫn nhỏ hơn kích thước file chủ ban đầu.
+- Giải nén file chủ trước khi file này thực thi.
+
+##### 1.7. Kỹ thuật phá hoại
+
+Rất đa dạng trong phương thức phá hoại, có thể liên quan tới việ phá hoái dữ liệu trên máy tính hoặc phá hoại trực tiếp các chương trình hệ thống.
+
+##### 1.8. Kỹ thuật chống bẫy
+
+Chọn lọc file trước khi lây nhiễm theo một số tiêu chí nào đó nhằm tránh những file bẫy của chương trình Antivirus.
+
+##### 1.9. Kỹ thuật tối ưu
+
+Gồm các kỹ thuật viết mã và thiết kế nhằm tối ưu chương trình về tốc độ và kích thước
+
+#### 2. Các kỹ thuật đặc biệt
+
+### E. Phòng chống Virus
 
 ## III. Các giải thuật mã hóa
 
