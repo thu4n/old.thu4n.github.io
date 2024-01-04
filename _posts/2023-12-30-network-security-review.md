@@ -74,8 +74,6 @@ Password Pilfering là một hình thức tấn công nhằm đánh cắp mật 
 
 **3.2. Social engineering**
 
-![](https://media.licdn.com/dms/image/D4D12AQGUV1A0JIRi2w/article-cover_image-shrink_720_1280/0/1679281558811?e=2147483647&v=beta&t=YDrGAWsTIHsyApi0oX-XmjCq0u6uVIOJuVBfADpqoRw)
-
 - Là phương pháp sử dụng các kỹ năng xã hội để ăn cắp thông tin mật của người khác thông qua các thủ thuật như Mạo danh, Lừa đảo qua email, Thu thập thông tin từ giấy tờ bị loại bỏ, Tạo trang web đăng nhập giả hoặc chỉ đơn giản là Kết bạn làm quen rồi lấy cắp thông tin cá nhân của mục tiêu.
 - Ý kiến cá nhân: Đây có thể được xem là phương pháp nguy hiểm nhất khi nó tấn công vào yếu tố con người nhiều hơn là hệ thống.
 
