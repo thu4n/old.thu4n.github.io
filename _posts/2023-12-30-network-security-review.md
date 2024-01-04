@@ -414,7 +414,80 @@ Gồm các kỹ thuật viết mã và thiết kế nhằm tối ưu chương tr
 
 #### 2. Các kỹ thuật đặc biệt
 
+1. [Kỹ thuật tạo vỏ bọc](#21-kỹ-thuật-tạo-vỏ-bọc)
+2. [Kỹ thuật đa hình](#22-kỹ-thuật-đa-hình)
+3. [Kỹ thuật biến hình](#23-kỹ-thuật-biến-hình)
+4. [Kỹ thuật chống mô phỏng và theo dõi](#24-kỹ-thuật-chống-mô-phỏng-và-theo-dõi)
+
+##### 2.1. Kỹ thuật tạo vỏ bọc
+
+Là kỹ thuật chống gỡ rối / dịch ngược mã lệnh virus nhằm chống lại phần mềm antivirus. Thường mã hoá hoặc sử dụng các lệnh JMP và CALL để chương trình lộn xộn, phức tạp. Ngoài ra còn sử dụng các thủ tục giả để phân tích viên gặp khó khăn khi phân biệt các tác vụ.
+
+##### 2.2. Kỹ thuật đa hình
+
+Là kỹ thuật chống lại phương pháp dò tìm đoạn mã mà các chương trình antivirus thường sử dụng để nhận dạng một virus đã biết bằng cách tạo ra các bộ giải mã khác biệt.
+
+##### 2.3. Kỹ thuật biến hình
+
+Cũng là một kỹ thuật chống lại các kỹ thuật nhận dạng của chương trình antivirus bằng cách sinh ra cả đoạn mã mới hoàn toàn. Đây là một kỹ thuật khó và phức tạp.
+
+##### 2.4. Kỹ thuật chống mô phỏng và theo dõi
+
+Một số chương trình antivirus hiện đại sử dụng phương pháp heuristic để phát hiện virus dựa trên hành vi của chương trình. Kỹ thuật này nhằm chống lại sự phát hiện của chương trình antivirus như vậy. Thông thường là chèn thêm những đoạn mã lệnh “rác” không ảnh hưởng đến logic của chương trình xen kẻ giữa những mã lệnh thực sự.
+
+#### 3. Các kỹ thuật trên mạng
+
+##### 3.1. Kỹ thuật lây nhiễm trên mạng
+
+- Sử dụng hàm GetLogicalDriveStrings để lây lan qua các ổ đĩa chia sẻ từ xa được ánh xạ thành ổ đĩa cục bộ.
+- Sử dụng các hàm API để liệt kê các ổ đĩa mà người sử dụng đã kết nối.
+
+##### 3.2. Kỹ thuật phát tán virus trên mạng
+
+- Sử dụng sự phổ biến của email, chặn các API hỗ trợ mạng.
+
+##### 3.3. Kỹ thuật phá hoại trên mạng
+
+- Tạo các cổng nghe đợi sẵn để virus có thể tiến hành các hoạt động phá hoại hay do thám như lấy trộm mật khẩu, khởi động máy, phá hoại hệ thống…
+- Tấn công từ chối dịch vụ (DoS)
+
 ### E. Phòng chống Virus
+
+#### 1. Các dấu hiệu máy tính nhiễm virus
+
+- Máy không khởi động được hoặc không vào 
+Windows được.
+- Máy hoặc ứng dụng dễ bị treo
+- Máy chạy chậm hơn bình thường, ổ cứng đọc liên tục.
+- Không in được
+- Máy báo thiếu file nào đó.
+- Xuất hiện nhiều file lạ không rõ nguồn gốc.
+- Thông báo thiếu bộ nhớ
+- Mất dữ liệu
+
+#### 2. Cách phòng chống virus máy tính
+
+- Hạn chế sử dụng đĩa mềm hoặc USB không rõ nguồn gốc mà chưa có sự kiểm tra bằng các phần mềm diệt virus.
+- Không cài đặt các phần mềm không cần thiết hoặc download từ trên mạng về.
+- Không sử dụng các phần mềm không có bản quyền.
+- Không nên mở xem các thư điện tử lạ.
+- Phải cài các phần mềm chống virus tốt nhất.
+- Phải sao lưu dữ liệu thường xuyên
+
+#### 3. Chương trình quét và diệt Virus
+
+Các chương trình tìm diệt Virus sẽ quét các tập tin thực thi, tập tin office, tập tin đính kèm E-mail, các tập tin được download và những dạng tập tin khác có thể trở thành host của Virus (Hostable files).
+
+Các phương pháp quét chuẩn bao gồm:
+- **Basic scanning**
+    - Tìm chữ ký của virus đã được biết đến trong các tập tin hostable, bao gồm cả cấu trúc, định dạng, các mẫu, và những đặc trưng khác.
+    - Kiểm tra kích thước của các file hệ thống đã bị thay đổi để phát hiện nhiễm virus.
+- **Heuristic scanning**: quét các đoạn mã đáng ngờ trong các tập tin thực thi dựa trên công nghệ heuristics.
+- **ICV scanning**
+    - Sử dụng giải thuật HMAC để tính toán giá trị kiểm tra tính toàn vẹn của tập tin thực thi chưa bị nhiễm virus và một khoá mã hoá cố định.
+    - Một giá trị ICV được nối vào cuối của tập tin thực thi không bị nhiễm virus
+    - Các virus không biết mật mã sẽ không thể thay đổi ICV
+    - Khi một tập tin bị nhiễm virus, giá trị ICV của nó sẽ thay đổi so với giái trị ICV ban đầu.
 
 ## III. Các giải thuật mã hóa
 
