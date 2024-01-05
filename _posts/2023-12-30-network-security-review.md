@@ -13,7 +13,9 @@ math: true
 
 Xin chào các bạn, trong bài viết lần này mình và 2 người bạn nữa của mình sẽ cố gắng tóm tắt về môn học NT101 - An toàn mạng máy tính theo chương trình giảng dạy cho lớp Mạng tại UIT. Nội dung khá là dài nhưng thầy đã rộng lượng cho tận **2 tờ A4** thì có vẻ sẽ đủ, thời gian làm bài nếu mình nhớ không lầm thì đâu đó khoảng **75 phút**. Nôm na là thế, chúng ta sẽ có **8 chương** tổng cộng cần phải ôn tập nên ta vô thẳng nội dung chính luôn thôi.
 
-Note: Cần bổ sung các hình ảnh minh họa.
+> Bài viết này rất dài do nội dung lý thuyết dày đặc từ 8 chương, mỗi chương trên dưới 100 slide. Chúng mình khuyến khích các bạn nên chọn lọc nội dung bản thân cảm thấy phù hợp nhất để ghi vào tài liệu A4 thay vì cố gắng nhét hết mọi kí tự. Ngoài ra, hãy phân lô bán nền trên tờ A4 để tận dụng triệt để diện tích mặt giấy, nói cách khác là chia cột hoặc ô.
+{: .prompt-warning }
+
 ## I. Tổng quan
 
 ### A. Một số khái niệm
@@ -1091,6 +1093,8 @@ Các khả năng tấn công trên hệ thống:
 
 ## VI. Giao thức bảo mật mạng
 
+*Được tổng hợp bởi [howtodie123](https://github.com/howtodie123)*
+
 ### A. Vị trí của mật mã trong mạng máy tính
 - **Các giao thức bảo mật mạng:**
     + Mã hóa khóa đối xứng
@@ -1800,10 +1804,290 @@ Các công việc chính khi kiểm thử hệ thống bao gồm:
 ## VIII. Bảo mật mạng ngoại vi
 
 ### A. Tổng quan
+
+Các thuật toán mã hoá không hiệu quả trong việc ngăn chặn các gói tin độc hại đi vào mạng cục bộ. Thay vào đó, Các giải thuật chứng thực có thể được sử dụng để xác định các gói tin đến từ các user tin cậy và giúp ngăn chận các gói tin độc hại đi vào mạng. Một vấn đề khác lại phát sinh với cách này là các máy tính trong mạng đa số đều không có đủ tài nguyên, phương tiện… để thực hiện các giải thuật chứng thực trong mọi tình huống.
+
+Giải pháp đưa ra: **Kỹ thuật tường lửa - firewall**
+
+![firewall](https://www.milesweb.in/blog/wp-content/uploads/2019/12/HardwareFirewall.gif)
+
+Tường lửa được phát triển trong những năm 1980, nó được sử dụng như một hàng rào ngăn cách giữa vùng không đáng tin cậy là **mạng Internet** (external network) và vùng có độ tin cậy cao là **mạng nội bộ** (internal network)
+
+Tường lửa có thể là một thiết bị phần cứng, một gói phần mềm hoặc là sự kết hợp của cả hai. Tường lửa có thể được nhúng vào các thiết bị mạng phổ biến như router, switch, modem, wireless access point.
+
+- Tường lửa cứng (phần cứng) nhanh nhưng khó cập nhật.
+- Tường lửa mềm (phần mềm) linh hoạt hơn vì dễ dàng cập nhật.
+
+**Tường lửa phần cứng**
+
+1. Cisco Router
+2. FortiNet
+3. CheckPoint Safe@Office
+4. Sonicwall PRO 
+5. WatchGuard Firebox
+
+**Tường lửa phần mềm**
+
+1. Comodo Firewall 
+2. ESET Smart Security
+3. ZoneAlarm
+4. Outpost Firewall Pro 
+5. F-Secure Internet Security
+
+**Phân loại theo tính năng đặc trưng**
+
+- **Packet filter**: kiểm tra cả IP header lẫn TCP header (Hoạt động ở tầng Network).
+- **Circuit gateway** (Hoạt động ở tầng Transport).
+- **Application gateway** (Hoạt động ở tầng Application).
+- **Dynamic packet filter**: là tường lửa lai, kết hợp cả hai loại packet filter và circuit gateway vào trong một hệ thống tường lửa.
+
 ### B. Bộ lọc gói tin (Packet Filters)
+
+Là kỹ thuật tường lửa cơ bản. Kiểm tra các gói tin từ bên ngoài đi vào mạng nội bộ và từ mạng nội bộ đi ra bên ngoài.
+
+**Đặc điểm**:
+
+- Chỉ kiểm tra IP header và TCP header, không kiểm tra phần payload sinh ra từ lớp ứng dụng.
+- Sử dụng một tập các quy tắc để quyết định xem gói tin nào được cho phép hoặc bị từ chối đi vào (ra).
+- Gồm hai loại là **stateless filtering** (bộ lọc phi trạng thái) và **stateful filtering** (bộ lọc có trạng thái)
+
+#### 1. Stateless filtering
+
+Là kỹ thuật tường lửa đơn giản nhất và được sử dụng rộng rãi nhất.
+
+**Đặc điểm**:
+
+- Xử lý mỗi gói tin như một đối tượng độc lập
+- Kiểm tra một gói tin khi nó đến, ra quyết định phù hợp và không lưu lại bất kỳ thông tin nào về gói tin này.
+- Đối với mỗi gói tin, thường kiểm tra Địa chỉ IP nguồn và đích trong IP header, Port nguồn và port đích trong một TCP header hoặc UDP header. Việc kiểm tra được thực hiện dựa theo một tập quy tắc gọi là Access control list (ACL).
+- Bộ lọc này không đòi hỏi tính toán nhiều do mặc định tại lớp mạng đã có nhiệm vụ phải kiểm tra IP Header để phân phối gói tin.
+
+Bên dưới là một bảng ví dụ đơn giản về các quy tắc ACL, trong đó `int` là internal - nội bộ, `ext` là external - ngoại vi:
+
+|int addr| int port| ext addr| ext port| action| comment|
+|:--|-|-|
+|192.166.1.5|*|*|443|allow|Access HTTPS websites|
+|*|*|200.5.12.7|*|block|Block packets to this address|
+
+Bộ lọc phi trạng thái thường chặn những kiểu gói tin:
+
+- Một gói đi vào có địa chỉ IP nội bộ giống như địa chỉ IP nguồn nhằm mục đích che giấu chính nó như là một gói tin hợp pháp trong mạng nội bộ.
+- Một gói (vào hoặc ra) có quy định cụ thể bộ định tuyến sẽ được sử dụng nhằm mục đích bỏ qua các tường lửa xác định.
+-  Một gói có phần payload rất nhỏ với mục đích làm TCP header trong phần payload sẽ bị ngắt thành hai hay nhiều phần. Ví dụ như đóng gói port nguồn và port đích trong những gói IP khác nhau. Đây là cách tấn công TCP fragmentation attack.
+
+Ngoài việc chặn những gói tin độc hại đi vào, bộ lọc phi trạng thái còn chận những gói tin nội bộ đi ra mạng ngoài có đặc tính là những gói điều khiển dùng cho việc thực thi truyền thông trong mạng nội bộ như **Bootp**, **DHCP**, **TFTP**, **NetBIOS**, **LRP** và **NFS**.
+
+**Ưu điểm**: dễ thực hiện, không cần tính toán nhiều vì chỉ kiểm tra các IP header và TCP header.
+
+**Nhược điểm**: Không ngăn chặn được các gói tin độc hại khai thác sơ hở của các phần mềm ở tầng ứng dụng; mỗi gói tin phải được kiểm tra đối với toàn bộ 
+ACL, có thể gây nên một nút cổ chai trên một mạng tốc độ cao, dẫn đến thất thoát gói tin và giảm tốc độ truyền ngoài ý muốn.
+
+#### 2. Stateful filtering
+
+Bộ lọc có trạng thái còn được gọi là bộ lọc trạng thái kết nối (connection-state filtering), giữ lại thông tin về kết nối giữa một host nội bộ và một host bên ngoài.
+
+Một trạng thái kết nối chỉ ra đó là kết nối TCP hay UDP và kết nối này có được thiết lập hay không. Trạng thái kết nối được lưu trong một bảng trạng thái (state table).
+
+Khi một gói tin đến (vào hay ra), bộ lọc sẽ kiểm tra xem gói tin này đã có trong bảng trạng thái hay chưa.
+- Nếu có, tường lửa sẽ cho gói tin đi qua và lưu lại thông tin (TCP sequence number…) cho lần sau.
+- Nếu gói tin này là gói SYN, tường lửa sẽ tạo một entry mới trong bảng trạng thái.
+- Nếu gói tin không thuộc về một kết nối đã có và nó không phải là một gói SYN, tường lửa sẽ huỷ nó.
+
+Bất kỳ một port nào được mở bởi một host nội bộ ngầm định sẽ có số port nhỏ hơn 1024 (Số port nhỏ hơn 1024 là port chuẩn). Ngầm định, host bên ngoài sẽ sử dụng số port giữa **1024** và **65535** để thực thi một kết nối với host nội bộ.
+
+Bên dưới là ví dụ về một bảng trạng thái:
+
+|client addr| client port| server addr| server port| connection state| protocol|
+|:--|-|-|
+|192.166.1.5|1030|129.63.24.84|443|established|TCP|
+|192.168.1.25|1034|129.63.24.84|162|established|UDP|
+
+Bộ lọc có trạng thái và bộ lọc phi trạng thái thường được **sử dụng kết hợp với nhau**. Khi gặp khó khăn trong việc xác định chận một gói dựa trên trạng thái kết nối, **ACL** sẽ được sử dụng để giúp ra quyết định chính xác.
+
+Việc giữ lại các trạng thái kết nối cần đến các cấu trúc dữ liệu phức tạp và các giải thuật tìm kiếm. Thực hiện những công việc này đòi hỏi không gian lưu trữ lớn, hoạt động nhiều hơn của CPU, giảm lưu lượng mạng. 
+
+Attacker có thể đưa một số lượng lớn các gói tin vào tường lửa mục tiêu sử dụng bộ lọc có trạng thái, có thể làm ngắt các kết nối giữa mạng nội bộ và bên ngoài. Do đó, khi sử dụng bộ lọc có trạng thái, cần phải chắc chắn rằng có thể quản lý được sự phức tạp giữa thời gian và không gian. 
+
+**Ví dụ**: Thay vì giữ lại toàn bộ thông tin lịch sử của một kết nối, chỉ cần giữ lại thông tin của kết nối này trong một khoảng thời gian nào đó.
+
 ### C. Cổng mạch (Circuit Gateways)
+
+![circuit](https://2.bp.blogspot.com/-5sZYbxvbgYw/VnWvSf4UfJI/AAAAAAAAAKU/wGGmkOz8npY/s1600/circuit%2Blevel%2Bgateway.JPG)
+
+**Cổng mạch** (Circuit gateways, còn gọi là Circuit-level gateways), thực thi tại tầng Transport (đôi khi có ngoại lệ mà ngoại lệ khi nào thì mình không biết). Thường kết hợp các bộ lọc gói tin và cổng mạch để tạo ra một **bộ lọc gói tin động** (Dynamic Packet Filter – DFD).
+
+Đối tượng của cổng mạch là chuyển tiếp một kết nối TCP giữa một host nội bộ và một host bên ngoài. Do đó, cổng mạch cũng được xem như là một Transparent Proxy Firewall.
+
+- Trước tiên, cổng mạch sẽ xác nhận một phiên TCP - TCP Session.
+- Kế đó cổng mạch thực thi riêng biệt một kết nối với host nội bộ và một kết nối với host bên ngoài.
+- Duy trì một bảng các kết nối hợp lệ và duy trì việc kiểm tra các gói tin đi vào với các thông tin chứa trong bảng.
+- Cho phép gói tin đi qua nếu thuộc về một kết nối đã có duy trì trong bảng, ngược lại sẽ bị chặn.
+- Khi phiên kết thúc, entry tương ứng sẽ bị huỷ khỏi bảng và mạch được đóng lại.
+
+Trong thực tế, một tổ chức thường phân tách mạng nội bộ của mình với mạng ngoại vi bằng một cổng mạch có một địa chỉ IP public có thể kết nối với ngoại vi, và các host trong mạng nội bộ sẽ sử dụng địa chỉ IP private. Sau khi thực thi một kết nối mạng với host ngoại vi và một kết nối mạng với host nội bộ, cổng mạch sẽ đóng vai trò như là một node chuyển tiếp mà **không cần kiểm tra** các gói tin đi qua nó.
+
+> Do không cần kiểm tra như vậy, các gói tin độc hại có thể vào mạng nội bộ qua một kênh đã thiết lập sẵn. Vì vậy, cổng mạch nên được **sử dụng cùng với các bộ lọc gói tin** và cần có một tập tin log để ghi nhận lại thông tin của các gói tin (vào, ra) đã xác nhận, bao gồm địa chỉ IP nguồn, port nguồn, địa chỉ IP đích, port đích, và chiều dài của mỗi gói tin.
+{: .prompt-warning }
+
 ### D. Cổng ứng dụng (Application Gateways)
+
+![proxy](https://www.dispersednet.com/network-security-firewalls/module6/images/application-gateway1.gif)
+
+Còn được gọi là **Application-level gateways** (ALG) hay Proxy Servers, là các gói phần mềm được cài đặt trên một máy tính được chỉ định. Một ALG hoạt động như một proxy cho một host nội bộ, xử lý các dịch vụ được yêu cầu bởi các clients ngoại vi.
+
+ALG kiểm tra chi tiết trên mỗi gói IP (vào, ra), bao gồm việc kiểm tra những định dạng chương trình ứng dụng (ví dụ như định dạng MIME, định dạng SQL…) chứa trong gói và xem xét payload của nó có được cho phép hay không.
+
+Giả sử một tổ chức muốn cài đặt một Web server và cho phép các user hợp pháp trên Internet có thể truy cập đến các trang Web này trên Web server.
+- Để bảo vệ Web server khỏi bị tổn hại, một phương án phổ biến là cài đặt một cổng ứng dụng như là một proxy cho Web server này, gọi là **Web proxy server**.
+- Web proxy server nhận các yêu cầu tại port 80 từ các client ngoại vi và thực hiện kiểm tra chi tiết phần payload của gói tin.
+- Chỉ sau khi phần payload này **thoả yêu cầu kiểm tra**, Web proxy server sẽ chuyển gói này đến Web server.
+- Web proxy server cũng kiểm tra các trang Web do Web server gửi đến các client ngoại vi và lưu chúng trong cache của nó. Nếu các client khác cũng yêu cầu những trang Web này, Web proxy server sẽ **chuyển trực tiếp** các trang này từ cache đến client mày không cần truy cập đến Web server. Loại Web proxy server này còn được gọi là **cổng ứng dụng** (Cache Gateways). Cổng ứng dụng thường sử dụng với một router có khả năng lọc gói tin. Router này được đặt phía sau gateway để bảo vệ các kết nối giữa gateway và các host nội bộ.
+
 ### E. Bastion Hosts
+
+**Bastion hosts** là các máy tính với cơ chế phòng thủ mạnh. Chúng thường được dùng làm cổng ứng dụng, cổng mạch, hoặc các kiểu tường lửa khác. Một bastion host được cài đặt với một hệ điều hành tin cậy và không chứa những chương trình hoặc chức năng không cần thiết nhằm giảm đi những lỗi không đáng có và dễ dàng kiểm tra tính bảo mật.
+
+Gateways hoạt động trên bastion hosts cần phải thoả những điều kiện sau:
+
+1. Phần mềm Gateway chỉ nên viết theo những module nhỏ để dễ dàng cho việc kiểm tra.
+2. Một bastion host cần chứng thực các user tại tầng mạng bằng cách xác nhận địa chỉ IP nguồn và đích chứa trong gói IP. Gateways chạy trên bastion host nên chứng thực user độc lập tại một tầng **cao hơn**.
+3. Một bastion host chỉ nên kết nối đến một **số lượng nhỏ** những host nội bộ.
+4. Bastion hosts nên giữ lại các file log, lưu trạng thái của mỗi phiên TCP.
+5. Nếu nhiều gateways đang chạy trên một bastion host, những gateways này cần phải được xử lý một cách độc lập để khi một gateway bất kì bị lỗi sẽ không ảnh hưởng đến phần còn lại.
+6. Bastion hosts nên hạn chế ghi dữ liệu lên đĩa cứng của chúng nhằm giảm cơ hội các mã độc hại xâm nhập vào hệ thống.
+7. Gateways chạy trên một bastion host không nên được dùng quyền admin hệ thống.
+
 ### E. Cấu hình tường lửa
+
+Gateways chạy trên một bastion host thườngđược sử dụng với bộ lọc gói tin.
+
+Các cấu hình tường lửa thông dụng:
+
+- [Single-Homed Bastion Host System (SHBH)](#1-single-homed-bastion-host-system)
+- [Dual-Homed Bastion Host System (DHBH)](#2-dual-homed-bastion-host-system)
+- [Screened Subnets (SS)](#3-screened-subnets)
+- [Demilitarized Zones (DMZ)](#4-demilitarized-zones)
+
+#### 1. Single-Homed Bastion Host System
+
+![single](https://www.dispersednet.com/network-security-firewalls/module6/images/singlehomed.gif)
+
+Bao gồm một **packet-filtering router** và một **bastion host**, trong đó router kết nối mạng nội bộ với mạng ngoại vi và bastion host nằm trong mạng nội bộ.
+
+- Router sẽ thông báo ra bên ngoài địa chỉ IP và số port của các server nội bộ. Router sẽ không chuyển tiếp các gói tin đi vào trực tiếp đến các server mà sẽ kiểm tra các gói tin này, sau đó mới chuyển cho bastion host.
+- Bastion host tiếp tục kiểm tra gói tin đi vào, nếu thoả, sẽ xác định server nội bộ nào gói tin muốn được chuyển tới.
+- Các gói tin từ mạng nội bộ đi ra bên ngoài cũng phải qua bastion host. Bộ lọc gói tin của tường lửa kiểm tra mỗi gói tin đi ra ngoài và ngăn lại nếu địa chỉ nguồn của nó **không phải** là địa chỉ IP của bastion host hoặc không thoả các quy tắc lọc.
+
+Trong một hệ thống SHBH, nếu attacker thoả hiệp được với packet-filtering router thì có thể sửa được các luật trong ACL để bỏ qua bastion host và truyền thông trực tiếp với các host nội bộ. Vấn đề này có thể giải quyết bằng cách sử dụng **Dual-Home Bastion Host** (DHBH).
+
+#### 2. Dual-Homed Bastion Host System
+
+![Alt text](/assets/img/other/network-security-review/dual-home.png)
+
+Một DHBH chia mạng nội bộ vào hai zones: inner zone (private zone) và outer zone.
+
+- Địa chỉ IP của các host trong inner zone không thể vươn tới được từ các mạng ngoại vi.
+- Địa chỉ IP của các host trong outer zone có thể vươn tới được trực tiếp từ các mạng ngoại vi.
+- Router được đặt giữa mạng ngoại vi và outer zone, giữa mạng ngoại vi và bastion host.
+- Inner zone trong DHBH chỉ được kết nối đến bastion host nên được bảo vệ bởi cả bastion host và packet-filtering router.
+- Các server trong outer zone được bảo vệ bởi packet-filtering router.
+- Tương tự như trong hệ thống SHBH, một DHBH cho phép các máy tính server trong outer zone có thể được truyền thông trực tiếp đến Internet mà không cần phải đi qua bastion host.
+- ACL trong router cho phép các gói từ ngoài vào đi qua nó nếu địa chỉ nguồn được cho phép, và địa chỉ IP đích cùng số port thoả với địa chỉ IP của máy server cũng như một port đang mở của server này.
+
+Trong hệ thống DHBH, attacker nếu thoả hiệp với packet-filtering router cũng vẫn không thể vượt qua được bastion host.
+
+
+#### 3. Screened Subnets
+
+![Alt text](/assets/img/other/network-security-review/screened.png)
+
+Là cấu hình tường lửa **bảo mật nhất**.
+
+Bao gồm một bastion host và **hai** packet-filtering router, là một mạng SHBH với packet-filtering router thứ hai (inner router) chen vào giữa bastion host và mạng nội bộ. 
+
+Nói cách khác, trong một Screened Subnet, một router đặt giữa Internet và bastion host, một router khác đặt giữa bastion host và mạng nội bộ. Hai tường lửa lọc gói sẽ tạo ra một screened subnetwork cô lập ở giữa. Các máy tính server và thiết bị nào không cần bảo mật mạnh thường được đặt trong screened subnetwork này.
+
+Trong Screend Subnet:
+
+- **Router ngoài (outer router)** sẽ thông báo cho mạng ngoại vi địa chỉ IP và số port của các máy tính server và thiết bị kết nối đến screened subnetwork.
+- **Router trong (inner router)** sẽ thông báo cho mạng nội bộ địa chỉ IP và số port của các máy tính server và thiết bị kết nối đến screened subnetwork.
+- Cấu trúc của mạng nội bộ là ẩn với thế giới bên ngoài.
+- Có thể di chuyển một số server (database server…) từ screened subnetwork đến mạng nội bộ để cung cấp một sự bảo vệ mạnh hơn.
+- Có thể đặt các proxy server tương ứng (chẳng hạn database server) trong screened subnetwork.
+
+Cấu hình này làm tăng tính bảo mật của hệ thống nhưng cũng làm giảm tốc độ xử lý nên trong mỗi ứng dụng cụ thể, cần tìm kiếm những cấu hình tối ưu phù hợp.
+
+#### 4. Demilitarized Zones
+
+![Alt text](/assets/img/other/network-security-review/dmz.png)
+
+Một subnetwork giữa hai tường lửa trong mạng nội bộ thường được xem như một Demilitarize zone (DMZ). Trong đó:
+
+- Tường lửa bên ngoài bảo vệ vùng DMZ với mạng ngoại vi và tường lửa bên trong bảo vệ mạng nội bộvới vùng DMZ.
+- Một DMZ có thể có hoặc không có bastion host.
+- Các server không yêu cầu bảo mật mạnh được đặt trong vùng DMZ.
+- Các máy tính cần phải được bảo mật cao nhất được đặt trong subnet kết nối đến tường lửa bên trong.
+
 ### G. Chuyển dịch địa chỉ mạng (NAT)
+
+NAT (Network Address Translation Protocol) chia địa chỉ IP vào hai nhóm:
+
+- Nhóm 1 bao gồm các địa chỉ IP công cộng, có thể vươn tới được từ mạng ngoại vi.
+- Nhóm 2 bao gồm các địa chỉ IP riêng và không thể vươn tới được một cách trực tiếp từ mạng ngoại vi.
+
+> Những thông tin thềm về NAT như NAT tĩnh, NAT động hay PAT, các bạn có thể xem thêm trong bài blog [Ôn tập quản trị mạng](https://thu4n.dev/posts/network-admin-review/#nat) của mình.
+{: .prompt-info }
+
 ### H. TMG – Threat Management Gateway
+
+![tmg](https://richardhicks.files.wordpress.com/2011/04/forefront_tmg_sm.jpg?w=584)
+
+Forefront Threat Management Gateway 2010 là phiên bản của Microsoft thay thế cho ISA 2006
+
+Những tính năng chính mà TMG cung cấp:
+
+- Firewall
+- Secure Web Access
+- E-mail Protection
+- Intrusion Prevention
+- Remote Access
+- Deployment and Management
+- Subscription Services
+
+Các điểm mới của TMG so với ISA:
+
+- Hỗ trợ Windows Server 2008 R2.
+- URL filter.
+- E-mail anti-malware, anti-spam.
+- Intrusion Prevention.
+- Cải tiến UI tốt hơn cho việc quản trị và báo cáo.
+
+Các mô hình mạng trong TMG:
+
+- Edge Firewall
+- 3-Leg Perimeter
+- Front Firewall
+- Back Firewall
+- Single Network Adaptor
+
+> Chi tiết về các mô hình TMG này mình có thấy một bài viết tổng hợp tại [https://securityzone.vn/t/chapter-2-microsoft-firewall-topology.600/](https://securityzone.vn/t/chapter-2-microsoft-firewall-topology.600/). Anh em có thể tham khảo để nắm rõ hơn.
+{: .prompt-info}
+
+**Bảng so sánh cơ chế hoạt động của một số TMG**
+
+| |SecureNAT Client| Forefront TMG | Web Proxy Client |
+|:--|-|-|
+| Yêu cầu cài đặt| Không cần cài đặt, chỉ <br> cần trỏ default gateway <br> về TMG Server|Phải cài đặt chương trình | Khai báo proxy server <br> trong các trình duyệt web|
+| Hệ điều hành hỗ trợ| Mọi hệ điều hành <br> hỗ trợ TCP/IP| Windows only| Mọi trình duyệt web
+|Giao thức hỗ trợ|Tất cả| Tất cả| HTTP, HTTPS và FTP
+|Hỗ trợ chứng thực| Không|Có|Có
+
+
+**Và nội dung trên cũng đã khép lại bài blog quá đỗi dài dòng này. Nếu bạn đọc được đến dòng này thì đáng khâm phục thật đấy, chúc bạn có một kỳ thi cuối kỳ đạt được kết quả cao hơn cả mong đợi!**
+
+## IX. Nguồn tham khảo
+
+1. Tài liệu lý thuyết của môn học An toàn mạng máy tính, UIT.
+2. [ALG by 3CX](https://www.3cx.com/pbx/alg/)
+3. [AES-CCMP by PCMag](https://www.pcmag.com/encyclopedia/term/aes-ccmp)
+4. Một số hình ảnh minh họa sử dụng trong bài là mượn từ các paper được xuất bản tại [ResearchGate](https://www.researchgate.net/).
