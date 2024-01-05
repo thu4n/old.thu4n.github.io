@@ -261,6 +261,8 @@ Một số cổng đi cùng các Trojan thông dụng:
 
 ### C. Virus
 
+![virus](https://images.ctfassets.net/xwxknivhjv1b/2FPp826aM4wggdhHFIARFV/f367943e9f421440e8f32292c3b1300c/Computer_Virus_Hero.svg)
+
 Những thông tin cơ bản về virus, bạn có thể xem lại tại mục [I.B.9. Malicious Software](#9-malicious-software)
 
 #### 1. Lịch sử của Virus
@@ -1099,19 +1101,295 @@ Công nghệ Wi-Fi được phát triển dựa trên bộ tiêu chuẩn `IEEE 8
 
 ### B. Các kiểu chứng thực
 
+- Open System Authentication: Không có chứng thực, client chỉ việc gửi yêu cầu kết nối.
+- Shared Key Authenticaion: 
+   - AP gửi một challenge cho client, client mã hóa nó bằng key mình đang có.
+   - AP giải mã văn bản nhận được và nếu đúng, client đó được chứng thực.
+   - CLient kết nối thành công tới AP.
+- Centralized Authentication Server:
+   - AP gửi EAP-Request (Extensible Authentication Protocol-Request) cho client đang yêu cầu kết nối để xác định danh tính. Sau khi nhận được phản hồi, sẽ chuyển tiếp về RADIUS Server
+   - Trong suốt quá trình chứng thực, AP chỉ làm nhiệm vụ tiếp nhận yêu cầu kết nối và gửi các yêu cầu về cho RADIUS Server. 
+   - Mọi tác vụ chứng thực được xử lý bởi Server.
+
 ### C. WEP, WPA và WPA2
+
+#### 1. WEP
+
+**Wired Equivalent Privacy** là một giao thức không dây theo chuẩn 802.11 cung cấp thuật toán mã hóa cho quá trình truyền dữ liệu. WEP sử dụng một Initialization Vector (Vector khởi tạo) để hình thành các stream cipher - chuỗi mã hóa RC4 và có cơ chế checksum là CRC32.
+
+![WEP](https://www.researchgate.net/publication/303417816/figure/fig9/AS:627929046335490@1526721359103/WEP-encryption-and-decryption-processes.png)
+
+**Quy trình hoạt động của WEP**
+
+1. AP tạo ra một khóa mã hóa 40 bit (Shared key).
+2. Nối khóa này với IV 24 bit được tạo ra từ thuật toán tạo IV để tạo chuỗi khóa mới cho mỗi gói (Per packet key) có kích thước 40 hoặc 104 bit.
+3. Chuỗi khóa mới đi qua thuật toán mã hóa RC4.
+4. Payload (dữ liệu cần được chuyển đi) sau khi được đính kèm checksum ở header từ thuật toán CRC sẽ tiếp tục được XOR với chuỗi khóa ở bước 3 => Cipher text.
+5. Phía client nếu sở hữu Shared key sẽ thực hiện lại các bước 2,3,4 khi nhận được cipher text. Khi thực hiện phép XOR  sẽ đưa cipher text về lại thành plain text.
+
+**Cách để crack WEP**
+
+1. Dùng `aireplay-ng` để giả mạo xác thực với AP.
+2. Dùng `airodump-ng` để thu thập các IV từ AP đó.
+3. Tiếp tục dùng `aireplay-ng` để liên tục gửi request đến AP.
+4. Sử dụng tấn công từ điển để lấy được khóa giải mã từ các IV thu tập được.
+
+#### 2. WPA
+
+**Wi-FI Protected Access** cũng là một giao thức bảo mật không dây dựa theo bộ tiêu chuẩn 802.11 nhưng với cải tiến so với WEP về thuật toán và cơ chế trao đổi khóa.
+
+![WPA](https://www.researchgate.net/publication/330982933/figure/fig1/AS:724313523105793@1549701209239/WPA-encryption-process.jpg)
+
+**Quy trình hoạt động của WPA**
+
+1. AP khởi tạo PSK - Pre-Shared Key để từ đó tạo ra PMK - Pairwise Master Key dùng để gửi cho client. Từ PMK, tiếp tục tạo ra Temporal Encryption Key - Khóa mã hóa tạm thời cho mỗi gói tin.
+2. Trộn các khóa lại với nhau bao gồm Temporal Encryption Key, TSC - TKIP Sequence Counter (Bộ đếm TKIP) và địa chỉ MAC đích. 
+3. Sử dụng thuật toán mã hóa RC4 để từ đó tạo ra keystream.
+4. Dữ liệu được đính kèm MIC key (Message Integrity Check) được mã hóa với thuật toán Micheal. Sau đó, đính kèm thêm checksum từ CRC-32.
+5. Thực hiện phép XOR giữa keystream và dữ liệu được mã hóa từ bước 3 => cipher text.
+6. Client sau khi nhận được PMK từ AP sẽ thực hiện lại các bước như 1,2,3 để giải mã thay vì mã hóa. Sau đó, tự tính lại giá trị MIC để so sánh với giá trị MIC có trong gói tin nhận được để kiểm tra tính toàn vẹn của dữ liệu. Nếu bằng nhau, dữ liệu xem như là toàn vẹn và được giải mã thành công thành plaintext.
+
+#### 3. WPA2
+
+Một giao thức bảo mật không dây tiếp tục cải tiến thêm từ WPA, được khuyến nghị sử dụng cho các mạng không dây hiện đại ngày nay.
+
+![WPA2](https://www.researchgate.net/profile/Ali-Alsahlany/publication/330982933/figure/fig2/AS:724313523113985@1549701209257/WPA-II-encryption-process.jpg)
+
+**Quy trình hoạt động của WPA2**
+
+1. Tạo AAD - Additional Authentication Data (Dữ liệu xác thực bổ sung) từ MAC header. 
+2. Tạo Nonce - Number used once (Số chỉ dùng một lần) từ MAC header và PN - Packet Number
+3. Khởi tạo TK - Temporal Key (Khóa tạm thời) với kích thước 128 bit.
+3. Plaintext cũng như AAD, Nonce và TK được mã hóa với thuật toán AES-CCMP - **A**dvanced **E**ncryption **S**tandard-**C**ounter Mode **C**BC-**M**AC **P**rotocol
+4. PN được tiếp tục sử dụng để tạo CCMP Header.
+5. Đính kèm MAC Header và CCMP Header vào payload
+6. Cuối cùng thêm cipher text và MIC đã mã hóa từ AES-CCMP vài payload.
+
+> Phần này mình soạn nhưng cũng không chắc lắm do muốn giống sơ đồ trong slide bài giảng trên trường thì phải tìm lại mấy tài liệu đã rất cũ. Khối AES-CCMP cũng không có giải thích gì thêm nên coi như là nó làm phép thuật trong đó vậy.
+{: .prompt-warning }
+
+**Cách để crack WPA/WPA2**
+
+Trong slide bài giảng hiện không có cách hiệu quả, chỉ có việc bắt các gói tin trong quá trình handshake rồi brute force dựa trên thông tin có được.
+
+#### 4. Bảng so sánh tổng quan 3 giao thức
+
+| |WEP|	WPA|	WPA2|
+|:-------|:--------|:--------|
+|Mã hóa|	RC4 |	RV4, TKIP|AES-CCMP
+|Kích thước IV| 24 bit | 48 bit | 48 bit|
+|Kích thước khóa|	40/104 bit|	128 bit|	128 bit
+|Cơ chế checksum| CRC-32| Thuật toán Micheal và CRC-32| AES-CCMP
+|Độ bảo mật|Thấp|	Trung bình|	Cao
 
 ### D. Các mối đe dọa
 
+Ta có 5 nhóm mối đa dọa như sau:
+
+1. [Access Controls Attack - Tấn công kiểm soát truy cập](#1-access-controls-attack)
+2. [Integrity Attack - Tấn công tính toàn vẹn](#2-integrity-attack)
+3. [Confidentiality Attack - Tấn công tính bảo mật](#3-confidentiality-attack)
+4. [Availability Attack - Tấn công tính sẵn sàng](#4-availability-attack)
+5. [Authentication Attack - Tấn công xác thực](#5-authentication-attack)
+
+
+#### 1. Access Controls Attack
+
+- MAC Spoofing
+- Ad Hoc Associations
+- AP Misconfiguration
+- Client Misassociation
+- Unauthorized Association
+- Promiscuous Client
+- Rogue Access Point
+- War Driving
+
+#### 2. Integrity Attack
+
+- Data Frame Injection
+- WEP Injection
+- Data Replay
+- IV Replay
+- Bit-Flipping
+- Extensible AP Replay
+- RADIUS Replay
+- Virus trong mạng không dây
+
+#### 3. Confidentiality Attack
+
+- Eavesdropping
+- Traffic Analysis
+- Cracking WEP key
+- Evil Twin AP
+- Man-In-The-Middle Attack
+- Masquerading
+- Session Hijacking
+- Honeypot AP
+
+#### 4. Availability Attack
+
+- AP Theft
+- DoS
+- Beacon Flood
+- Authenticate Flood
+- ARP Cache Poisoning
+- TKIP MIC Exploit
+- De-authenticate Flood
+- Disassociation Attack
+- EAP-Failure
+- Routing Attack
+- Power Saving Attack
+
+#### 5. Authentication Attack
+
+- Application Login Theft
+- PSK Cracking
+- Shared Key Guessing
+- Domain Login Cracking
+- Identity Theft
+- VPN Login Theft
+- Password Speculation
+- LEAP Cracking
+
 ### E. Phương pháp và công cụ tấn công
+
+Quy trình tấn công mạng Wi-Fi gồm 5 bước:
+1. **Wi-Fi Discovery** - Tìm kiếm và xác định mang Wi-Fi mục tiêu
+2. **GPS Mapping** - Dùng GPS để xác định vị trí vật lý của vùng mạng đó, hacker có thể chia sẻ thông tin này hoặc bán để kiếm tiền.
+3. **Wireless Traffic Analysis** - Phân tích lưu lượng mạng để tìm ra lỗ hỏng nhằm khai thác và tán công
+4. **Launch wireless attack** - Bắt đầu tấn công với phương thức phù hợp
+5. **Crack Wi-Fi encryption** - Crack được chuẩn mã hóa của Wi-Fi
+
+Các công cụ có thể dùng trong mỗi bước:
+1. Wi-Fi Discovery: inSSIDer, NetSurveyor, NetStumbler, Vistumbler, WirelessMon...
+2. GPS Mapping: WIGLE, Skyhook... (Dùng phương pháp War Driving kết hợp với các công cụ này)
+3. Wireless Traffic Analysis: WireShark, OmniPeek Tool, CommView Tool, AirMagnet Wi-Fi Analyzer... (Dùng kết hợp với USB-WiFi)
+4. Launch wireless attack: Bộ công cụ Aircrack-ng là thích hợp nhất để sử dụng một số phương pháp tấn công đã giới thiệu ở mục [VII.D.1.Access Controls Attack](#1-access-controls-attack).
 
 ### F. Tấn công mạng Bluetooth
 
+#### 1. Phương pháp tấn công
+
+1. **Bluesmacking** - Tấn công DoS bằng các gói tin ngẫu nhiên khiến thiết bị đang kết nối bị crash
+2. **Blue Snarfing** - Đánh cắp dữ liệu thông qua kết nối Bluetooth
+3. **Bluejacking** - Kỹ thuật gửi các thông điệp qua Bluetooth mà không cần bên kia yêu cầu hay chấp nhận (Kiểu ai hỏi mà bộ trưởng trả lời ấy).
+4. **BlueSniff** - War driving nhưng mà là Bluetooth
+
+> Phần kiến thức về kiến trúc, các chế độ và mối đe dọa trong Bluetooth mình sẽ không đề cập ở đây, các bạn có thể xem thêm trong slide chương 7.
+{: .prompt-warning}
+
+#### 2. Các công cụ tấn công
+
+- **Super Bluetooth Hack** - Một Bluetooth Trojan khi lây nhiễm sẽ cho phép kẻ tấn công điều khiển và đọc thông tin từ điện thoại của nạn nhân.
+- **PhoneSnoop** - Một spyware hoạt động trên các điện thoại Blackberry
+- **BlueScanner** - Dùng để khám phá các mạng Bluetooth xung quanh và sẽ cố ghi lại mọi thông tin có thể từ các thiết bị Bluetooth sao cho không cần phải xác thực.
+
 ### G. Biện pháp phòng chống
+
+#### 1. Các lớp bảo mật trong mạng không dây
+
+- Lớp bảo mật tín hiệu không dây
+- Lớp bảo mật kết nối
+- Lớp bảo mật dữ liệu
+- Lớp bảo mật người dùng cuối
+- Lớp bảo mật mạng
+- Lớp bảo mật thiết bị
+
+#### 2. Phòng chống Bluetooth Hacking
+
+- Dùng các mã PIN bất thường, độc lạ.
+- Luôn luôn bật chế độ mã hóa khi thiết lập kết nối.
+- Thường xuyên kiểm tra xem các thiết bị nào đã từng ghép cặp với mình và xóa những thiết bị lạ.
+- Chỉ bật chế Bluetooth lên khi cần thiết.
+- Để thiết bị ở chế độ non-discoverable (chế độ ẩn)
+- Không chấp nhận mọi yêu cầu kết nối từ thiết bị lạ mặt.
+
+#### 3. Phòng chống Wi-Fi Hacking
+
+- Sử dụng các chuẩn WPA, WPA2 thay vì WEP.
+- Thiết lập WPA2-Enterprise mỗi khi có thể.
+- Đặt AP ở một vị trí an toàn.
+- Thường xuyên cập nhật driver cho các thiết bị mạng.
+- Sử dụng server cho việc chứng thực.
+- Ngắt kết nối mạng khi không cần thiết sử dụng.
+
+> Còn một số thông tin khác liên quan đến thiết lập SSID mình sẽ không đề cập ở đây, các bạn có thể xem thêm trong slide chương 7.
+{: .prompt-warning}
 
 ### H. Công cụ bảo mật Wi-Fi
 
+**WIPS - Wireless Intrusion Prevention System**, thuật ngữ nói về các hệ thống ngăn ngừa và phát hiện xâm nhập cho mạng không dây.
+
+Ta có các công cụ liên quan như sau:
+
+- **AirMagnet Wi-Fi Analyzer Tool** - công cụ để kiểm tra và troubleshoot mạng. Nó có thể phát hiện các cuộc tấn công DoS hoặc tấn công xác thực. Ngoài ra, công cụ này còn hỗ trợ phát hiện ra các thiết bị kết nối không hợp pháp trong mạng.
+- **AirDefense** - Một nền tảng GUI cho phép theo dỗi và phát hiện xâm nhập. Nó hoạt đông thông qua các sensor phân tán để quan sát lưu lượng mạng 24/7, từ đó cho phép phân tích các lỗ hỏng zero-day trong thời gian thực. Hơn thế, công cụ này cho phép thực hiện các cuộc điều tra pháp chứng kỹ thuật số thông qua những bản ghi chi tiết mà nó lưu trữ.
+
+**Adaptive WIPS** nói về các hệ thống không chỉ phát hiện mối nguy mà còn hỗ trợ giảm thiểu hậu quả của các cuộc tấn công.
+
+Ta có các công cụ liên quan như sau:
+
+- **Aruba RFProtect WIPS** - Gồm 2 tính năng chính là Automatic Threat Mitigation (Giảm thiểu mối nguy tự động) và Automated compilance reporting (Báo cáo tự động theo quy chuẩn)
+
 ### I. Kiểm thử hệ thống
+
+Kiểm thử hệ thống là quá trình đánh giá các chỉ số về an toàn thông tin trong một hệ thống để phân tích các điểm yếu trong thiết kế, các sai phạm về kỹ thuật và các lỗ hỏng còn tồn tại.
+
+Các công việc chính khi kiểm thử hệ thống bao gồm:
+
+- Threat Assesment - Xác định mối đe dọa.
+- Upgrading Infrastructure - Nâng cấp hạ tầng của phần mềm, phần cứng hoặc trong thiết kế mạng (NT113 reference!!).
+- Risk Prevetion and Response - Ngăn ngừa mối nguy và phản hồi, xử lý.
+- Security Control Auditing - Kiểm thử lại mức độ hiệu quả của các quyền kiểm soát và truy cập trong bảo mật mạng không dây.
+- Data Theft Detection - Phát hiện mất cắp dữ liệu nếu có.
+- Information System Management - Thu thập thông tin và ghi nhận lại cho quá trình quản trị hệ thống thông tin.
+
+**Quy trình kiểm thử hệ thống**
+
+1. Khám phá các thiết bị không dây.
+2. Nếu tìm thấy, ghi chép lại các thông tin tìm được.
+3. Nếu thiết bị tìm thấy đang sử dụng Wi-Fi, thực hiện tấn công Wi-Fi căn bản để xem chúng có đang dùng mã hóa WEP hay không.
+4. Nếu đúng là mã hóa WEP, thực hiện phương pháp pen test dành cho WEP. Nếu không, kiểm tra xem chúng có đang dùng mã hóa WPA/WPA2 không.
+5. Nếu đúng là mã hóa WPA/WPA2, thực hiện phương pháp pen test dành cho các mã hóa này. Nếu không, kiểm tra xem chúng có đang dùng mã hóa LEAP.
+6. Nếu đúng là mã hóa LEAP,  thực hiện phương pháp pen test dành cho mã hóa này. Nếu không, kiểm tra xem WLAN này có phải là WLAN không có mã hóa.
+7. Nếu không mã hóa, thực hiện phương pháp pen test dành cho các mạng không mã hóa. Nếu không, thực hiện cách tấn công dùng chung cho các mạng Wi-Fi.
+
+> Tóm gọn lại là tấn công nó trước, rồi check coi nó dùng loại mã hóa nào thì pen test theo loại đó. Nếu không xác định được thì dùng phương pháp tổng quan nhất.
+{: .prompt-tip}
+
+#### 1. Pen test tổng quan
+
+1. Tạo một Rogue AP.
+2. Gửi gói tin hủy xác thực người dùng.
+3. Nếu người dùng bị hủy xác thực rồi cố gắng kết nối lại thì bắt gói tin trong quá trình đó. Kiểm tra xem có cần mật khẩu hay chứng thực gì không.
+4. Nếu có cần mật khẩu, dùng công cụ **wzcook** để crack nó hoặc là tiếp tục hủy xác thực người dùng để kiếm thêm thông tin.
+
+#### 2. Pen test LEAP
+
+1. Gửi gói tin hủy xác thực người dùng.
+2. Nếu người dùng bị hủy xác thực rồi cố gắng kết nối lại thì bẻ mã hóa LEAP thông qua công cụ như **asleap** hoặc **THC-LEAP Cracker**.
+3. Nếu chưa thành công, thực hiện lại bước 1.
+
+#### 3. Pen test WPA/WPA2
+
+1. Gửi gói tin hủy xác thực người dùng.
+2. Nếu người dùng bị hủy xác thực rồi cố gắng kết nối lại thì bắt gói tin rồi kiểm tra trạng thái **EAPOL handshake**
+3. Nếu bắt được gói **EAPOL handshake**, thực hiện tấn công từ điển để dò ra mật khẩu.
+4. Nếu chưa thành công, thực hiện lại bước 1.
+
+#### 4. Pen test WEP
+
+1. Kiểm tra xem SSID có bị ẩn hay không.
+2. Nếu không bị ẩn, bắt gói tin và kiểm tra trạng thái của chúng.
+3. Sau khi bắt được, bẻ mã hóa WEP thông qua các công cụ như **Aircrack-ng**. Nếu chưa thành công, thực hiện lại bước 1.
+4. Nếu là SSID ẩn, hủy xác thực client rồi đợi tiến hành xác thực lại để tìm ra SSID. Sau đó thực hiện bước 3.
+
+#### 5. Pen test WLAN không mã hóa
+
+1. Kiểm tra xem SSID có bị ẩn hay không.
+2. Nếu không bị ẩn, bắt gói tin để tìm dãy địa chỉ IP và kiểm tra trạng thái danh sách MAC filter.
+3. Nếu có sử dụng MAC filter, giả thành địa chỉ MAC hợp lệ dùng tool như **SMAC** và kết nối tới AP sử dụng địa chỉ IP trong dãy kiếm được.
+4. Nếu SSID ẩn, tìm kiếm SSID thông qua công cụ **Aireplay-ng** rồi thực hiện bước 3.
 
 ## VIII. Bảo mật mạng ngoại vi
 
