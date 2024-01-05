@@ -838,7 +838,7 @@ Các khả năng tấn công trên hệ thống:
 
 ## V. Chứng thực dữ liệu
 
-*Được tổng hợp bởi [howtodie123](https://github.com/howtodie123).*
+*Được tổng hợp bởi [howtodie123](https://github.com/howtodie123)*
 
 ### A. Tổng quan
 
