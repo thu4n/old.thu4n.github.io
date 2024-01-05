@@ -8,6 +8,7 @@ authors:
 categories: [Learning]
 image: /assets/img/other/tet-cuu.png
 tags: [computer network, network security, sysadmin]
+math: true
 ---
 
 Xin chào các bạn, trong bài viết lần này mình và 2 người bạn nữa của mình sẽ cố gắng tóm tắt về môn học NT101 - An toàn mạng máy tính theo chương trình giảng dạy cho lớp Mạng tại UIT. Nội dung khá là dài nhưng thầy đã rộng lượng cho tận **2 tờ A4** thì có vẻ sẽ đủ, thời gian làm bài nếu mình nhớ không lầm thì đâu đó khoảng **75 phút**. Nôm na là thế, chúng ta sẽ có **8 chương** tổng cộng cần phải ôn tập nên ta vô thẳng nội dung chính luôn thôi.
@@ -79,7 +80,7 @@ Password Pilfering là một hình thức tấn công nhằm đánh cắp mật 
 
 **3.3. Dictionary Attacks**
 
-![](https://miro.medium.com/v2/resize:fit:948/0*zCEEJ4OJn4ZI9VRo)
+![](/assets/img/other/network-security-review/dictionaryAttack.jpg)
 
 - Tên tiếng Việt là tấn công từ điển, thực hiện bằng cách duyệt tìm từ một từ điển các username và password đã được mã hoá (thu được từ các file SAM của Window hoặc từ trong thư mục `/etc/passwd` trong Linux).
 
@@ -504,23 +505,336 @@ Các phương pháp quét chuẩn bao gồm:
 
 ## III. Các giải thuật mã hóa
 
+*Được tổng hợp bởi [ahamonuser](https://github.com/Ahamonuser)*
+
 ### A. Giới thiệu về mã hóa
+
+#### Một số khái niệm
+
+- Thông điệp, văn bản: là một chuỗi hữu hạn các ký hiệu lấy từ bảng chữ cái, các con số và được ký hiệu là m.
+- Phép mã hóa: là việc biến đổi một văn bản sao cho nó không thể hiểu nổi đối trừ người nhận được mong muốn. Phép mã hoá được ký hiệu là e(m).
+- Khóa: là thông số đầu vào của phép mã hoá hoặc giải mã. Khoá mã hoá ký hiệu là $k_e$, khoá giải mã ký hiệu là $k_d$.
+- Chuỗi mật mã: là chuỗi kết quả qua phép mật mã hoá và thường được ký hiệu là c, với: c = e(m,$k_e$).
+- Phép giải mã: là việc xác định văn bản gốc m từ chuỗi mật mã c và khoá giải mã $k_d$, và được ký hiệu là d(c,$k_d$).
+- Như vậy: d(c,$k_d$) = m.
+
+#### Phân loại các giải thuật mã hóa
+
+- Giải thuật mã hóa cổ điển: Vigenère, Caesar, Playfair, Hill,...
+- Giải thuật mã hóa hiện đại:
+    + Mã hóa đối xứng (symmetric):
+        * Mã hóa theo các khối bit: DES, AES, RC2, RC6, MARS,...
+        * Mã hóa theo từng bit: RC4
+    + Mã hóa bất đối xứng (asymmetric): RSA
 
 ### B. Giải thuật mã hóa cổ điển
 
+#### 1. Mã thay thế đơn giản (Substitution Cipher)
+* Khóa là 1 hoán vị của bảng chữ cái. Do đó sẽ có 26! ~ $4.10^{26}$ kiểu khóa khác nhau.
+* Mỗi kí tự của thông điệp m được thay bằng ký hiệu tương ứng qua khóa, từ đó cho ra chuỗi mật mã c.
+* Ví dụ:
+
+Ta có 1 khóa sau:
+
+![Hình ảnh khóa ví dụ](https://thedetectivesociety.com/wp-content/uploads/2021/05/Substitution-Cipher-1.png)
+
+> Vì đây là hoán vị nên các bạn không cần chuẩn bị sẵn hình như trên đâu chỉ cần hiểu phương thức mã hóa là được. Nhưng khuyến khích nên soạn sẵn 1 bảng chữ cái để không lẫn lộn.
+{: .prompt-info }
+
+Giả sử ta có thông điệp m là HELLO.
+Khi này ta sẽ lần lượt mã hóa thông điệp m dựa trên khóa trên:
+* e(H) = d
+* e(E) = p
+* e(L) = v
+* e(O) = w
+
+Cuối cùng ta có được chuỗi mật mã sau: c = DPVVW.
+
+#### 2. Mã thay thế n-gram
+* Cũng tương tự như mã thay thế đơn giản nhưng ở đây chúng ta thay thế cho từng cụm ký tự.
+* Khóa vẫn sẽ là hoán vị của bảng chữ cái nên khi này có $26^n$ kiểu khác nhau, với n là số ký tự trong 1 cụm.
+* Khóa sẽ được biểu diễn dưới dạng bảng với các hàng biểu diễn ký hiệu đầu tiên, các cột biểu diễn ký hiệu thứ hai.
+
+#### 3. Mã hoán vị bậc d (Permutation Cypher)
+* Chia thông điệp **m** ra thành từng khối có chiều dài là **d**. Sau đó hoán vị lần lượt từng khối để tạo ra chuỗi mật mã **c**.
+
+* Ví dụ:
+
+Ta có m: Cryptool1 và d = 3.
+Qua phép mã hóa hoán vị bậc d, ta được chuỗi mật mã c: yCrtop1ol.
+
+#### 4. Mã dịch chuyển (Shift Cypher)
+
+##### Giải thuật Vigenère
+
+* Khóa là 1 chuỗi gồm d ký tự và sẽ được lặp lại cho đến khi độ dài khóa bằng độ dài văn bản m.
+* Khi mã hóa, từng ký tự sẽ được thay ký tự tương ứng trên bảng mã Vigenère với cột là ký tự cần thay ở m, hàng là ký tự cùng thứ tự trên chuỗi khóa
+
+* Ví dụ
+
+Ta có:
+Thông điệp: HAITC
+Khóa: MANU
+Khi này do khóa có độ dài ít hơn thông điệp nên lặp lại từng kí tự của khóa cho đến khi bằng, ta được: MANUM.
+
+![Bảng mã Vigenère](https://pages.mtu.edu/~shene/NSF-4/Tutorial/VIG/FIG-VIG-Table.jpg)
+
+Sử dụng bảng mã Vigenère ở trên, ta mã hóa m như sau:
+
+e(H, M) = T
+
+e(A, A) = A
+
+e(I, N) = V
+
+e(T, U) = N
+
+e(C, M) = O
+
+Khi đó ta được: c = TAVNO.
+
+**Lưu ý:** Khi viết vô tờ A4 thì mình khuyên các bạn thay vì ghi hẳn cái bảng mã thì chỉ cần ghi ra cái bảng chữ cái từ **A->Z** (cái dòng đầu tiên ý) sau đó đánh số từ **0->25** ở dưới các chữ cái sao cho **mỗi chữ tương ứng 1 số** (A vs 0, B vs 1,...). Khi làm bài thì các bạn lấy ký tự của **m** làm 'điểm bắt đầu' (như trong Ví dụ là kí tự **H**), sau đó coi con số ứng với ký tự có cùng thứ tự với nó trong chuỗi khóa (kí tự **M**) là bao nhiêu thì các bạn sẽ dịch sang phải trên bảng chữ cái chừng đấy lần là sẽ ra ký tự sau khi mã hóa. Trường hợp đến ký tự Z rồi mà còn lần dịch thì lần dịch tiếp theo sẽ sang ký tự A. Việc giải mã cũng tương tự nhưng sẽ dịch sang trái của bảng chữ cái.
+
+##### Giải thuật Caesar
+
+Giải thuật Caesar tương tự như giải thuật Vigenère nhưng nó đơn giản hơn. Ở Vigenère, chúng ta mã hóa từng ký tự theo cách khác nhau. Nhưng ở Caesar, chúng ta mã hóa các ký tự theo 1 cách duy nhất là dịch các kí tự sang phải **k** lần cho trước.
+
+Nói cách khác, khóa của giải thuật Caesar chỉ là chuỗi có 1 ký tự (d = 1) được lặp lại sao cho độ dài của nó bằng thông điệp m.
+
+#### 5. One - time Pad (OTP)
+
+Quy trình mã hóa OTP:
+
+* Đầu tiên các ký tự của thông điệp m được đưa về dạng nhị phân (cụ thể ký tự đó tương ứng mã nhị phân ra sao thì tùy đề sẽ có cung cấp).
+* Sau đó mỗi mã nhị phân đó sẽ cộng XOR (khác = 1, giống = 0) với mã nhị phân tương ứng từ khóa.
+* Cuối cùng chuyển các mã nhị phân nhận được về dạng ký tự thì sẽ được chuỗi mã hóa c.
+
+#### 6. Mã tuyến tính (Affine Cipher)
+
+Affine Cipher là một loại mật mã thay thế dùng một bảng chữ cái, trong đó mỗi chữ cái được ánh xạ tới một số sau đó mã hóa qua một hàm số toán học đơn giản.
+
+Việc mã hóa được thực hiện dưới dạng sau:
+
+**e(x) = ax + b (mod 26)** với a là số nguyên tố từ 1-26, b là số bước nhảy cũng có giá trị từ 1-26.
+
+#### 7. Mã Playfair
+
+* Giải thuật sẽ sử dụng 1 ma trận khóa dạng 5x5 hoặc 6x6.
+* Ma trận đầu tiên sẽ được thêm vào các ký tự của khóa.
+* Nếu ma trận chưa đầy thì sẽ được bổ sung bằng các ký tự từ A->Z. Trong đó I và J được coi là 1 ký tự.
+* Khi bổ sung các ký tự cho ma trận thì không được thêm các ký tự đã có trước đấy.
+* Giải thuật mã hóa:
+    - Mã hóa từng cặp 2 ký tự liên tiếp nhau.
+    - Nếu dư 1 ký tự, thêm ký tự “x” vào cuối.
+    - Nếu 2 ký tự nằm cùng dòng, thay thế bằng 2 ký tự tương ứng bên phải. Ký tự ở cột cuối cùng được thay bằng ký tự ở cột đầu tiên.
+
+   ![Alt text](/assets//img//other/network-security-review/playfair1.png)
+   _**Hai kí tự cùng dòng**_
+
+   - Nếu 2 ký tự nằm cùng cột được thay thế bằng 2 ký tự bên • dưới. Ký tự ở hàng cuối cùng được thay thế bằng ký tự ở hàng trên cùng
+
+   ![Alt text](/assets//img//other/network-security-review/playfair2.png)
+   _**Hai kí tự cùng cột**_
+
+   - Nếu 2 ký tự lập thành hình chữ nhật được thay thế bằng 2 ký tự tương ứng trên cùng dòng ở hai góc còn lại.
+
+   ![Alt text](/assets//img//other/network-security-review/playfair3.png)
+   _**Hai kí tự tạo thành hình chữ nhật**_
+
+
+#### 8. Mã Hill
+<!-- này t cũng chịu -->
+* Sử dụng m ký tự liên tiếp của plaintext và thay thế bằng m ký tự trong ciphertext với một phương trình tuyến tính trên các ký tự được gán giá trị lần lượt là A = 01, B = 02, …, Z = 26.
+* Chọn ma trận vuông Hill (ma trận H) làm khoá.
+* Mã hoá từng chuỗi n ký tự trên plaintext (vector P) với n là kích thước ma trận vuông Hill.
+* C = HP mod 26.
+* P = H$^{-1}$C mod 26.
+
+#### 9. Phương pháp phá mã cổ điển
+
+* Dựa vào đặc điểm ngôn ngữ.
+* Dựa vào tần suất xuất hiện của các chữ cái trong bảng chữ cái thông qua thống kê chính thức.
+* Dựa vào số lượng các ký tự trong bảng mã để xác định thông điệp gốc.
+
 ### C. Giải thuật mã hóa hiện đại
+
+#### 1. Giải thuật mã hóa DES
+
+* Dùng khoá có độ dài 56 bit để mã hoá các khối dữ liệu đầu vào 64 bit.
+* Giải thuật DES được hiểu nhanh là như sau:
+    + Sử dụng một khoá K tạo ra n khoá con K1, K2, …, Kn bằng giải thuật sinh khóa.
+    + Hoán vị dữ liệu đầu tiên (Initial permutation).
+    + Thực hiện mã hóa DES qua n vòng lặp. Tại mỗi vòng lặp:
+        - Dữ liệu được tách thành hai phần.
+        - Áp dụng các phép toán thay thế lên một phần, phần còn lại giữ nguyên.
+        - Hoán vị hai phần cho nhau.
+    + Hoán vị dữ liệu lần cuối (Final Permutation).
+
+#### 2. Giải thuật mã hóa AES
+
+* Kích thước khối dữ liệu đầu vào là 128 bit tương ứng với 16 bytes.
+* Kích thước khoá lần lượt là 128, 192, 256 bit (AES-128, AES-192, AES-256).
+* Mỗi khoá con là một cột gồm 4 bytes.
+* Mỗi khối dữ liệu đầu vào tạo thành một ma trận 4x4, gọi là ma trận trạng thái. Ma trận trạng thái này sẽ biến đổi trong quá trình thực hiện mã hoá.
+* Code thực hiện giải thuật AES:
+
+   ```
+      Cipher(byte in[4*Nb], byte out[4*Nb], word w[Nb*(Nr+1)]) 
+      begin 
+        byte state[4,Nb] 
+        state = in
+        AddRoundKey(state, w) 
+            for round = 1  step 1 to Nr-1
+                SubBytes(state)
+                ShiftRows(state)
+                MixColumns(state)
+                AddRoundKey(state, w+round*Nb)
+            end for
+        SubBytes(state) 
+        ShiftRows(state) 
+        AddRoundKey(state, w+round*Nb)
+        out = state
+      end
+   ```
+
+* Các hàm thực hiện trong các vòng lặp của giải thuật:
+    - Hàm SubBytes: mỗi byte trong state được thay thế với các byte khác, sử dụng một bảng look-up được gọi là S-box. S-box được dùng bắt nguồn từ hàm ngược trên trường GF(28).
+
+![SubBytes](https://upload.wikimedia.org/wikipedia/commons/d/db/Advanced_Encryption_Standard_InfoBox_Diagram.png)
+
+   - Hàm ShiftRows: các phần tử của hàng đầu tiên sẽ không thay đổi vị trí, hàng thứ hai dịch sang trái một cột, hàng thứ ba dịch sang trái hai cột, hàng cuối cùng sẽ dịch sang trái ba cột.
+
+![ShiftRows](https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/AES-ShiftRows.svg/2560px-AES-ShiftRows.svg.png)
+
+   * Hàm MixColumns: mỗi cột được xem như một đa thức và được nhân modulo x$^4$ + 1 với một biểu thức cố định c(x) = 3x$^3$ + x$^2$ + x + 2.
+
+![MixColumns](https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/AES-MixColumns.svg/2560px-AES-MixColumns.svg.png)
+
+   * Hàm AddRoundKey: mỗi byte trong bảng trạng thái được thực hiện phép XOR với một byte trong khoá con, từ đó sinh ra 1 khóa con mới.
+
+![AddRoundKey](https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/AES-AddRoundKey.svg/1920px-AES-AddRoundKey.svg.png)
+
+> Các hình ở trên do có background transparent nên khuyến khích các bạn chuyển web sang light mode để dễ nhìn hơn.
+{: .prompt-warning }
+
+#### 3. Giải thuật mã hóa công khai RSA
+
+* Thuật toán RSA có hai khóa:
+    - khóa công khai (hay khóa công cộng).
+    - khóa bí mật (hay khóa cá nhân).
+* Cặp khóa RSA được sinh ra từ 2 số nguyên tố lớn ngẫu nhiên.
+* Khóa công khai được công bố rộng rãi cho mọi người và được dùng để mã hóa thông điệp, và thông điệp đó chỉ có thể được giải mã bằng khóa bí mật tương ứng.
+* RSA hay được ứng dụng vào chữ ký điện tử bằng cách dùng khóa bí mật để ký chữ ký và dùng khóa công khai để xác minh chữ ký.
+* Giải thuật RSA rất an toàn nhưng tốc độ mã hoá và giải mã chậm hơn giải thuật DES hàng ngàn lần.
+* Do đó người ta kết hợp RSA với các giải thuật mã hóa khác bằng cách dùng RSA để mã hoá khoá mà các giải thuật khác đã dùng để
+mã hoá khối văn bản.
 
 ### D. Bẻ gãy một hệ thống mật mã
 
+Các khả năng tấn công trên hệ thống:
+
+* Tấn công chỉ dựa trên chuỗi mật mã (ciphertext-only attack): đối phương chỉ biết một vài mẫu chuỗi mật mã c.
+* Tấn công dựa trên văn bản đã biết (known-plaintext attack): đối phương đã biết độ dài đáng kể của văn bản gốc m và chuỗi mật mã c.
+* Tấn công dựa trên văn bản được chọn (chosen-plaintext attack): đối phương đã có được một số lượng nhất định các cặp thông điệp và chuỗi mật mã tương ứng (m, c).
+* Tấn công dựa trên chuỗi mật mã được chọn (chosen-ciphertext attack).
+* Tấn công dựa trên khóa được chọn (chosen-key attack).
+* Tấn công lựa chọn thích nghi bản mã (Adaptive chosen-ciphertext attack).
+* Timing attack.
+* Rubber hose attack.
+
 ## IV. Mã hóa công khai và quản lý khóa
+
+*Được tổng hợp bởi [ahamonuser](https://github.com/Ahamonuser)*
 
 ### A. Hệ mã hoá khoá công khai
 
+- Các bước chủ yếu khi thực hiện mã hoá khoá công khai:
+1. Mỗi user tạo ra một cặp khoá được sử dụng cho việc mã hoá và giải mã thông điệp.
+2. Mỗi user sẽ công bố khoá công khai của mình lên cho mọi người biết. Khoá riêng sẽ được giữ kín.
+3. Nếu B muốn gửi một tin nhắn bí mật cho A, B mã hoá tin nhắn này bằng cách sử dụng khoá công khai của A.
+4. Khi A nhận được tin nhắn, A giải mã nó bằng cách sử dụng khoá riêng của A. Không có ai khác có thể giải mã thông điệp bởi vì chỉ có A có khoá riêng của A.
+- Ứng dụng:
+    * Bảo mật (mã hoá/giải mã): một văn bản được mã hoá bằng khoá công khai của một người sử dụng thì chỉ có thể giải mã với khoá bí mật của người đó.
+
+   ![Alt text](/assets/img/other/network-security-review/iv_secrecy.png)
+   _**Secrecy**_
+
+   * Chứng thực: Một người sử dụng có thể mã hoá văn bản với khoá bí mật của mình. Nếu một người khác có thể giải mã với khoá công khai của người gửi thì có thể tin rằng văn bản thực sự xuất phát từ người gắn với khoá công khai đó.
+
+   ![Alt text](/assets/img/other/network-security-review/iv_auth.png)
+    _**Authentication**_
+
+   * Trao đổi khoá: Hai bên hợp tác để trao đổi session key. Trước tiên, mã hoá thông điệp X sử dụng khoá bí mật của người gửi (cung cấp chữ ký số) để được Y. Kế đó, mã hoá tiếp Y với khoá công khai của người nhận. Chỉ có người nhận đã xác định trước mới có khoá bí mật của người nhận và khoá công khai của người gửi để giải mã hai lần để được X.
+
+- Một số giải thuật hệ mã hoá khoá công khai:
+    * RSA: có cả 3 ứng dụng.
+    * Elliptic Curve: có cả 3 ứng dụng.
+    * Diffie-Hellman: chỉ có trao đổi khóa.
+    * DSS: chỉ có chứng thực.
+
 ### B. Giao thức trao đổi khoá Diffie-Hellman
+
+- Cho phép hai người dùng trao đổi khóa bí mật dùng chung trên mạng công cộng, sau đó có thể sử dụng để mã hóa các thông điệp.
+- Thuật toán tập trung vào giới hạn việc trao đổi các giá trị bí mật, xây dựng dựa trên bài toán khó logarit rời rạc.
+- Ví dụ:
+   - A và B chọn số nguyên tố chung là p = 13 và phần tử sinh g là 6.
+   - A tạo khóa bí mật **a<sub>PK</sub>** = 5, và tính khóa công khai **a<sub>PU</sub>** = $6^5$ mod 13 = 2. rồi gửi cho B khóa công khai **a<sub>PU</sub>**.
+   - B tạo khóa bí mật **b<sub>PK</sub>** = 4, và tính khóa công khai **b<sub>PU</sub>** = $6^4$ mod 13 = 9. và rồi gửi cho A khóa công khai **b<sub>PU</sub>**.
+   - Cả A và B đều tính được khóa chung K = $9^5$ mod 13 = $2^4$ mod 13 = 3
+
+   ![Diffie-Hellman](https://www.practicalnetworking.net/wp-content/uploads/2015/11/dh-revised.png)
 
 ### C. Hệ RSA
 
+- Văn bản rõ được mã hóa ở dạng khối, kích cỡ của khối phải nhỏ hơn hoặc bằng log$_2$(n).
+- Trong thực tế, kích thước khối là i bit, với 2$^i$ < n <= 2$^{i+1}$.
+- Giải thuật:
+    + Sinh cặp khóa:
+        * Tạo ngẫu nhiên 2 số nguyên tố p và q
+        * Tính n = p * q (công bố công khai)
+        * Tính phi n = (p - 1) * (q - 1)
+        * Chọn số nguyên e sao cho Ước số chung lớn nhất của e và phi n là 1 (người gửi biết)
+        * Tính d = e$^{-1}$ mod phi n = 1 (chỉ người nhận biết)
+        * Khoá công khai là (e, n)
+        * Khoá bí mật là (d, n)
+    + Mã hóa: Thực hiện hàm mã hóa c = m$^e$ mod n
+    + Giải mã: Thực hiện hàm giải mã m = c$^d$ mod n
+- Các yêu cầu sau đây phải được đáp ứng:
+    + Các giá trị của e, d, n phải thỏa mãn sao cho m$^{ed}$ mod n = m, với m < n.
+    + Phải dễ dàng tính toán được m$^e$ mod n và c$^d$ cho tất cả các giá trị của m < n.
+    + Không khả thi để xác định d khi cho e và n.
+    + p và q phải là các số nguyên tố rất lớn để không thể phân tích được n = p * q.
+
 ### D. Quản lý khoá
+
+#### 1. Thẩm quyền thu hồi khoá
+
+- Thu hồi khoá khi khoá bị sai sót hoặc có tính phá hoại.
+- Thường được tham gia bởi từ hai thực thể trở lên.
+- Cần đảm bảo:
+    + Càng nhiều bên tham gia càng tốt (chống phá hoại).
+    + Càng ít bên tham gia càng tốt (thu hồi nhanh).
+
+#### 2. Phân phối khoá mới
+
+- Phải phân phối khoá mới sau khi khoá cũ bị thu hồi nhằm đảm bảo hệ thống tiếp tục hoạt động một cách an toàn.
+- Giảm thời gian giữa thời điểm thu hồi khoá và thời điểm phân phối khoá mới tới mức tối thiểu.
+- Phải đảm bảo yêu cầu về an ninh và yêu cầu về tính sẵn sàng của hệ thống.
+
+#### 3. Thông báo thông tin về thu hồi khoá
+
+- Thông báo về một khóa nào đó bị thu hồi cần đến được tất cả những người đang sử dụng nó trong thời gian ngắn nhất có thể.
+- Có 2 cách thông báo:
+    + Thông tin được chuyển từ trung tâm tới người dùng.
+    + Người dùng lấy thông tin từ trung tâm.
+- Cung cấp các chứng thực có thời hạn.
+
+#### 4. Các biện pháp thực hiện khi lộ khoá
+
+- Hầu hết các trường hợp thu hồi khoá xảy ra khi khoá bí mật đã bị lộ. Hai khả năng xảy ra:
+    + Các văn bản mã hóa với khóa công khai sau thời điểm T không còn được xem là bí mật.
+    + Các chữ ký số thực hiện với khóa bí mật sau thời điểm T không còn được xem là thật.
+- Cần xác định người có quyền thu hồi khóa, cách thức truyền thông tin tới người dùng, cách thức xử lý các văn bản mã hóa với khóa bị lộ.
 
 ## V. Chứng thực dữ liệu
 
@@ -562,8 +876,10 @@ Các phương pháp quét chuẩn bao gồm:
 - **h** được tạo ra bằng cách sử dụng một khoá bí mật được gọi là một mã xác thực thông điệp (MAC – Message Authentication Code).
 - **h** cũng có thể thu được bằng cách sử dụng giải thuật checksum kết hợp một hàm băm để tạo ra một mã xác thực tin nhắn keyed-hash (HMAC - Keyed-Hash Message Authentication Code)
 
-#### 5. Điều khiển lỗi khi gởi thông điệp: 
+#### 5. Điều khiển lỗi khi gởi thông điệp
+
 ![Text thay thế](https://raw.githubusercontent.com/howtodie123/howtodie123/readme.io/image/1.PNG)
+
 - **a) Kiểm soát lỗi nội bộ**
 - **b) Kiểm soát lỗi bên ngoài**
 - **Giải thích kí hiệu:**
@@ -574,8 +890,10 @@ Các phương pháp quét chuẩn bao gồm:
   + F(M) : là hàm băm của dữ liệu M đầu vào 
   + II: Phép nối, dùng để nối 2 chuỗi kí tự, chuỗi bên dưới dùng để kiểm tra sau khi bên kia giải mã M
 
-#### 6. Các công dụng cơ bản của mã hóa:
+#### 6. Các công dụng cơ bản của mã hóa
+
 ![Text thay thế](https://raw.githubusercontent.com/howtodie123/howtodie123/readme.io/image/Picture2.png)
+
 - **Giải thích kí hiệu**
    + PU : public key , khóa công khai
    + PR : Private key, khóa bí mật
