@@ -760,6 +760,25 @@ Các phương pháp quét chuẩn bao gồm:
 
 ### A. Tổng quan và phân loại
 
+Công nghệ Wi-Fi được phát triển dựa trên bộ tiêu chuẩn `IEEE 802.11` và được sử dụng rộng rãi trong truyền thông mạng không dây. Các điểm phát sóng Wi-Fi hay còn gọi là Wi-Fi Hotspots, có thể được tìm thấy dễ dàng ở các nơi công cộng hoặc có thể thiết lập ngay tại nhà dễ dàng.
+
+#### 1. Phân loại các mạng không dây
+
+- Extension to a Wired Network - Mở rộng từ mạng dây
+- Multiple Access Points - Đa điểm truy cập
+- LAN-to-LAN Wireless Network - Mạng không dây giữa LAN với LAN
+- 3G/4G/5G Hotspot
+
+#### 2. Các chuẩn trong mạng không dây
+
+- `802.11a` - Băng thông lên tới **54 Mbps**, hoạt động ở băng tần **5 Ghz**.
+- `802.11b` - Băng thông lên tới **11 Mbps**, hoạt động ở băng tần **2.4 Ghz**.
+- `802.11g` - Băng thông lên tới **54 Mbps**, hoạt động ở băng tần **2.4 Ghz**.
+- `802.11i` - Thường dùng trong các WLANs, cung cấp cơ chế mã hóa tối ưu hơn cho các mạng dùng 3 chuẩn ở trên.
+- `802.11n` - Sử dụng công nghệ MIMO - Multiple Input Multiple Output để tăng tốc độ Wi-Fi (lên đến **100 Mbps**) và tăng độ phủ sóng.
+- `802.16` - Một nhóm các chuẩn mạng không dây dùng trong **MAN** - Metropolitan Area Network.
+- `Bluetooth` - Độ phủ sóng bé (khoảng cách **dưới 10m**) và băng thông tương đối thấp (**1-3 Mbps**)
+
 ### B. Các kiểu chứng thực
 
 ### C. WEP, WPA và WPA2
