@@ -2040,8 +2040,6 @@ NAT (Network Address Translation Protocol) chia địa chỉ IP vào hai nhóm:
 
 ### H. TMG – Threat Management Gateway
 
-![tmg](https://richardhicks.files.wordpress.com/2011/04/forefront_tmg_sm.jpg?w=584)
-
 Forefront Threat Management Gateway 2010 là phiên bản của Microsoft thay thế cho ISA 2006
 
 Những tính năng chính mà TMG cung cấp:
