@@ -564,8 +564,8 @@ Cuối cùng ta có được chuỗi mật mã sau: c = DPVVW.
 
 * Ví dụ:
 
-Ta có m: Cryptool1 và d = 3.
-Qua phép mã hóa hoán vị bậc d, ta được chuỗi mật mã c: yCrtop1ol.
+Ta có m: Cryptool1 và d = 3. Mỗi block ta sẽ hoán vị theo cách thức 1,2,3 -> 3,1,2
+Qua phép mã hóa hoán vị bậc d, ta được chuỗi mật mã c: yCropt1ol.
 
 #### 4. Mã dịch chuyển (Shift Cypher)
 
