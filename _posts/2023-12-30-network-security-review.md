@@ -252,8 +252,8 @@ Một số cổng đi cùng các Trojan thông dụng:
 | Back Orifice  |UDP| 31337 hoặc 31338|
 | Deep Throat |  UDP | 2140 và 3150|
 |NetBus|TCP|12345 và 12346|
-|Whack-a-mole|TCP|20034|
-|NetBus 2 Pro|TCP |21544|
+|Whack-a-mole|TCP|12361 và 12362|
+|NetBus 2 Pro|TCP |20034|
 |GirlFriend|TCP|21544|
 |Masters Paradise|TCP|3129, 40421, 40422, 40423 và 40426|
 
