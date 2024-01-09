@@ -420,7 +420,7 @@ Quy trình nén file để ngụy trang sự tồn tại của virus:
 
 ##### 1.7. Kỹ thuật phá hoại
 
-Rất đa dạng trong phương thức phá hoại, có thể liên quan tới việ phá hoái dữ liệu trên máy tính hoặc phá hoại trực tiếp các chương trình hệ thống.
+Rất đa dạng trong phương thức phá hoại, có thể liên quan tới việc phá hoại dữ liệu trên máy tính hoặc phá hoại trực tiếp các chương trình hệ thống.
 
 ##### 1.8. Kỹ thuật chống bẫy
 
@@ -992,7 +992,7 @@ Các khả năng tấn công trên hệ thống:
 
 - Sử dụng khóa bí mật (hoặc khóa công khai) -> mất 2^(k-1) lần thử cho một khóa k bit. Nếu biết cyphertext C (P<sub>i</sub>=D(K<sub>i</sub>,C)) -> cần thử với tất cả K<sub>i</sub> đến khi nào P<sub>i</sub> có plaintext chấp nhận được.
 - Sử dụng MAC -> Giả sử k>n (kích thước khoá lớn hơn kích thước MAC) và MAC1 = C(K, M1), việc thám mã phải thực hiện MAC<sub>i</sub> = C(K<sub>i</sub>, M<sub>1</sub>) với tất cả các giá trị có thể của K<sub>i</sub>. Ít nhất có một khoá đảm bảo MAC<sub>i</sub> = MAC<sub>1</sub>
-- Lưu ý rằng sẽ có 2k MACs được tạo ra nhưng chỉ có 2n < 2k giá trị MAC khác nhau. Do đó, một số khoá sẽ tạo ra các MAC chính xác và attacker không có cách nào để biết được đó là khoá nào. Trung bình, có 2k/2n = 2(k-n) khoá được tạo ra và attacker phải lặp đi lặp lại các cuộc tấn công.
+- Lưu ý rằng sẽ có 2k MACs được tạo ra nhưng chỉ có 2^n < 2^k giá trị MAC khác nhau. Do đó, một số khoá sẽ tạo ra các MAC chính xác và attacker không có cách nào để biết được đó là khoá nào. Trung bình, có 2^k /2^n = 2^(k-n) khoá được tạo ra và attacker phải lặp đi lặp lại các cuộc tấn công.
 
 #### 3. Ví dụ bài tập: 
 
