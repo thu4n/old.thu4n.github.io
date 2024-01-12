@@ -101,11 +101,11 @@ comments:
   # Giscus options › https://giscus.app
   giscus:
     repo:  thu4n/thu4n.github.io            # <gh-username>/<repo>
-    repo_id: 505139256
+    repo_id: R_kgDOHhvQOA
     category: Comments
     category_id: DIC_kwDOHhvQOM4CUBB4
     mapping:           # optional, default to 'pathname'
-    input_position:    # optional, default to 'bottom'
+    input_position: top  # optional, default to 'bottom'
     lang:              # optional, default to the value of `site.lang`
     reactions_enabled: # optional, default to the value of `1`
 
